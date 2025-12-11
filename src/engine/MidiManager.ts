@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { Note } from 'tonal';
 
 
@@ -59,5 +59,7 @@ export function useMidi() {
     );
   }, []);
 
-  return { activeNotes: Array.from(activeNotes), midiEnabled, error };
+  const activeNotesList = useMemo(() => Array.from(activeNotes), [activeNotes]);
+
+  return { activeNotes: activeNotesList, midiEnabled, error };
 }

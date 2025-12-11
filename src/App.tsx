@@ -3,6 +3,10 @@ import Staff from './components/music/Staff';
 import Piano from './components/music/Piano';
 import { useMidi } from './engine/MidiManager';
 import { TriadsLesson } from './lessons/basic-harmony/triads';
+import { 
+  LessonSequenceA, LessonSequenceB, LessonSequenceC,
+  LessonSequenceD, LessonSequenceE, LessonSequenceF 
+} from './lessons/basic-harmony/chord-progressions';
 import { MusicTheory } from './engine/MusicTheory';
 import { type Lesson } from './lessons/types';
 import { Play, RefreshCw, CheckCircle, XCircle, Menu, Music, BookOpen, Languages } from 'lucide-react';
@@ -12,7 +16,11 @@ import { TRANSLATIONS } from './i18n/translations';
 import type { Language } from './i18n/types';
 
 // Simple registry for now
-const AVAILABLE_LESSONS = [TriadsLesson];
+const AVAILABLE_LESSONS = [
+  TriadsLesson, 
+  LessonSequenceA, LessonSequenceB, LessonSequenceC,
+  LessonSequenceD, LessonSequenceE, LessonSequenceF
+];
 
 function App() {
   const { activeNotes, midiEnabled } = useMidi();
@@ -28,9 +36,7 @@ function App() {
 
   // Sync MIDI notes to user input state
   useEffect(() => {
-    if (activeNotes.length > 0) {
-      setUserNotes(activeNotes);
-    }
+     setUserNotes(activeNotes);
   }, [activeNotes]);
 
   // Handle on-screen piano input
@@ -52,8 +58,6 @@ function App() {
   const checkAnswer = () => {
     if (!currentQuestion) return;
 
-    // Validate using the raw userNotes (MusicTheory.validateChord handles enharmonics via chroma)
-    // But we can also pass displayNotes, it shouldn't matter for chroma.
     const isCorrect = currentQuestion.validate(userNotes);
     if (isCorrect) {
       setFeedback({ isCorrect: true, message: t.correct });
@@ -61,6 +65,29 @@ function App() {
       setFeedback({ isCorrect: false, message: t.incorrect });
     }
   };
+
+  // Auto-check and auto-advance
+  useEffect(() => {
+     if (!currentQuestion) return;
+
+     // 1. Auto-check if we have notes and haven't already marked correct
+     if (!feedback?.isCorrect && userNotes.length > 0) {
+         if (currentQuestion.validate(userNotes)) {
+             setFeedback({ isCorrect: true, message: t.correct });
+         }
+     }
+
+     // 2. Auto-advance if we are correct and the user RELEASED all notes
+     if (feedback?.isCorrect && userNotes.length === 0) {
+         // Add a small delay so they see the empty state for a split second? 
+         // Or just instant. User asked "when I release key it switches". 
+         // Instant feels fast, maybe too fast? Let's try 300ms debounce to avoid flicker if they release unevenly.
+         const timer = setTimeout(() => {
+             nextQuestion();
+         }, 300);
+         return () => clearTimeout(timer);
+     }
+  }, [userNotes, currentQuestion, feedback]);
 
   const nextQuestion = () => {
     setFeedback(null);
@@ -192,6 +219,7 @@ function App() {
               activeNotes={userNotes} 
               onNoteOn={handlePianoToggle} 
               onNoteOff={() => {}} 
+              octaves={3}
             />
           </div>
 

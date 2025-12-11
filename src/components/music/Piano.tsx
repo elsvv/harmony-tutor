@@ -82,10 +82,10 @@ const Piano: React.FC<PianoProps> = ({
                         }}
                     >
                         <span className={cn(
-                            "absolute bottom-3 left-1/2 -translate-x-1/2 font-medium select-none",
+                            "absolute bottom-3 left-1/2 -translate-x-1/2 font-medium select-none text-xs",
                             isActive ? "text-white" : "text-stone-400"
                         )}>
-                            {note}
+                            {note === 'C' ? `C${octave}` : ''}
                         </span>
                     </div>
                 );
@@ -141,15 +141,15 @@ const Piano: React.FC<PianoProps> = ({
                 }}
             >
                 <span className={cn(
-                    "absolute bottom-3 left-1/2 -translate-x-1/2 font-medium select-none",
+                    "absolute bottom-3 left-1/2 -translate-x-1/2 font-medium select-none text-xs",
                     isFinalActive ? "text-white" : "text-stone-400"
                 )}>
-                    C
+                    {`C${currentStartOctave + octaves}`}
                 </span>
             </div>
         );
 
-        return <div className="relative h-64 w-full">{elements}</div>;
+        return <div className="relative h-80 w-full">{elements}</div>;
     };
 
     return (
