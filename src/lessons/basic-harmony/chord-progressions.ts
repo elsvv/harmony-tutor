@@ -120,9 +120,10 @@ const SEQUENCE_F = [
 ] as const;
 
 
-const KEYS = ['C', 'G', 'F']; 
+// Ordered by complexity (circle of fifths / practical usage)
+const KEYS = ['C', 'G', 'F', 'D', 'Bb', 'A', 'Eb', 'E', 'Ab', 'B', 'Db', 'F#']; 
 
-const generateQuestionsForSequence = (sequence: typeof SEQUENCE_A, seqName: string, seqTitle: Record<string, string>): Question[] => {
+const generateQuestionsForSequence = (sequence: typeof SEQUENCE_A, seqName: string, _seqTitle: Record<string, string>): Question[] => {
     const questions: Question[] = [];
     
     KEYS.forEach(key => {
@@ -131,8 +132,8 @@ const generateQuestionsForSequence = (sequence: typeof SEQUENCE_A, seqName: stri
             questions.push({
                 id: `${seqName}-${key}-${idx}`,
                 text: { 
-                    en: `${seqTitle.en} in ${key} Major: Play ${step.label}`,
-                    ru: `${seqTitle.ru} в ${key} мажоре: Сыграйте ${step.label}`
+                    en: `In ${key} Major: Play ${step.label}`,
+                    ru: `В ${key} мажоре: Сыграйте ${step.label}`
                 },
                 targetChord: `${key} Major`,
                 validate: (inputNotes) => {
@@ -174,11 +175,11 @@ const createLesson = (id: string, sequence: any, name: string, titleEn: string, 
     };
 };
 
-export const LessonSequenceA = createLesson('seq-a', SEQUENCE_A, 'seq-a', 'Seq A: T53-S64-II2-D65', 'Посл. А: T53-S64-II2-D65', 'Root position start', 'Начало с тоники в основном виде');
-export const LessonSequenceB = createLesson('seq-b', SEQUENCE_B, 'seq-b', 'Seq B: T6-S53-II65-D2', 'Посл. Б: T6-S53-II65-D2', '1st Inversion start', 'Начало с тонического секстаккорда');
-export const LessonSequenceC = createLesson('seq-c', SEQUENCE_C, 'seq-c', 'Seq C: T64-S6-II43-D7', 'Посл. В: T64-S6-II43-D7', '2nd Inversion start', 'Начало с тонического квартсекстаккорда');
+export const LessonSequenceA = createLesson('seq-a', SEQUENCE_A, 'seq-a', 'T53-S64-II2-D65-T53', 'T53-S64-II2-D65-T53', 'Root position start', 'Начало с тоники в основном виде');
+export const LessonSequenceB = createLesson('seq-b', SEQUENCE_B, 'seq-b', 'T6-S53-II65-D2-T6', 'T6-S53-II65-D2-T6', '1st Inversion start', 'Начало с тонического секстаккорда');
+export const LessonSequenceC = createLesson('seq-c', SEQUENCE_C, 'seq-c', 'T64-S6-II43-D7-T3', 'T64-S6-II43-D7-T3', '2nd Inversion start', 'Начало с тонического квартсекстаккорда');
 
-export const LessonSequenceD = createLesson('seq-d', SEQUENCE_D, 'seq-d', 'Seq D: ...-II2-VII7-D65', 'Посл. Г: ...-II2-VII7-D65', 'Extended Sequence A with VII7', 'Расширенная А с VII7');
-export const LessonSequenceE = createLesson('seq-e', SEQUENCE_E, 'seq-e', 'Seq E: ...-II65-VII43-D2', 'Посл. Д: ...-II65-VII43-D2', 'Extended Sequence B with VII43', 'Расширенная Б с VII43');
-export const LessonSequenceF = createLesson('seq-f', SEQUENCE_F, 'seq-f', 'Seq F: ...-II43-VII2-D7', 'Посл. Е: ...-II43-VII2-D7', 'Extended Sequence C with VII2', 'Расширенная В с VII2');
+export const LessonSequenceD = createLesson('seq-d', SEQUENCE_D, 'seq-d', 'T53-S64-II2-VII7-D65-T53', 'T53-S64-II2-VII7-D65-T53', 'Extended Sequence A with VII7', 'Расширенная А с VII7');
+export const LessonSequenceE = createLesson('seq-e', SEQUENCE_E, 'seq-e', 'T6-S53-II65-VII43-D2-T6', 'T6-S53-II65-VII43-D2-T6', 'Extended Sequence B with VII43', 'Расширенная Б с VII43');
+export const LessonSequenceF = createLesson('seq-f', SEQUENCE_F, 'seq-f', 'T64-S6-II43-VII2-D7-T3', 'T64-S6-II43-VII2-D7-T3', 'Extended Sequence C with VII2', 'Расширенная В с VII2');
 
