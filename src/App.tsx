@@ -414,7 +414,7 @@ function LessonApp() {
                                             notes={displayNotes.length > 0 ? displayNotes : []}
                                             clef={currentQuestion.clef}
                                             keySignature={currentQuestion.keySignature}
-                                            width={450}
+                                            width={380}
                                             height={220} // Slightly taller for Grand Staff
                                         />
                                     </div>
