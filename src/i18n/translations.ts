@@ -29,6 +29,9 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
         keyLabel: 'Key:',
         restartSequence: 'Restart sequence',
         chordInfoTitle: 'Info about {label}',
+        categoryBasics: 'Fundamentals',
+        categoryClassical: 'Classical progressions',
+        categoryJazz: 'Jazz progressions',
     },
     ru: {
         appTitle: 'Гармония Тьютор',
@@ -58,5 +61,8 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
         keyLabel: 'Тональность:',
         restartSequence: 'Начать заново',
         chordInfoTitle: 'Информация о {label}',
+        categoryBasics: 'Основы',
+        categoryClassical: 'Классические прогрессии',
+        categoryJazz: 'Джазовые прогрессии',
     },
 };

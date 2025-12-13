@@ -24,7 +24,10 @@ import {
     BookOpen,
     Languages,
     Info,
+    Folder,
+    ChevronDown,
 } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { cn } from './lib/utils';
 import ErrorBoundary from './components/ui/ErrorBoundary';
 import { TRANSLATIONS } from './i18n/translations';
@@ -33,17 +36,35 @@ import { ProgressionTracker } from './components/ui/ProgressionTracker';
 import { InfoDrawer } from './components/ui/InfoDrawer';
 import { Drawer } from './components/ui/Drawer';
 import { getProgressionContent, getChordContent } from './content';
+import { JazzIIVILesson, JazzTurnaroundLesson } from './lessons/jazz/progressions';
 
 // Simple registry for now
-const AVAILABLE_LESSONS = [
-    TriadsLesson,
-    LessonSequenceA,
-    LessonSequenceB,
-    LessonSequenceC,
-    LessonSequenceD,
-    LessonSequenceE,
-    LessonSequenceF,
-];
+const LESSON_CATEGORIES = [
+    {
+        id: 'basics',
+        titleKey: 'categoryBasics',
+        lessons: [TriadsLesson],
+    },
+    {
+        id: 'classical',
+        titleKey: 'categoryClassical',
+        lessons: [
+            LessonSequenceA,
+            LessonSequenceB,
+            LessonSequenceC,
+            LessonSequenceD,
+            LessonSequenceE,
+            LessonSequenceF,
+        ],
+    },
+    {
+        id: 'jazz',
+        titleKey: 'categoryJazz',
+        lessons: [JazzIIVILesson, JazzTurnaroundLesson],
+    },
+] as const;
+
+const AVAILABLE_LESSONS = LESSON_CATEGORIES.flatMap((c) => c.lessons);
 
 function LessonApp() {
     const { activeNotes, midiEnabled } = useMidi();
@@ -62,6 +83,7 @@ function LessonApp() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [lang, setLang] = useState<Language>('en');
     const [selectedKey, setSelectedKey] = useState('C'); // State for Progression Mode
+    const [openCategoryId, setOpenCategoryId] = useState<string | null>(null);
 
     // Info drawer state
     const [isLessonInfoOpen, setIsLessonInfoOpen] = useState(false);
@@ -70,6 +92,13 @@ function LessonApp() {
 
     const t = TRANSLATIONS[lang];
     const currentQuestion = lesson.questions[currentQuestionIndex];
+
+    const activeCategoryId =
+        LESSON_CATEGORIES.find((c) => c.lessons.some((l) => l.id === lesson.id))?.id || null;
+
+    useEffect(() => {
+        if (activeCategoryId) setOpenCategoryId(activeCategoryId);
+    }, [activeCategoryId]);
 
     // Sync selected key when lesson changes slightly or just keep as user preference?
     // Better to reset 'selectedKey' to C or check if lesson supports it when lesson changes?
@@ -213,25 +242,76 @@ function LessonApp() {
                     <h3 className="text-xs font-semibold text-stone-400 uppercase tracking-wider mb-4 px-2">
                         {t.library}
                     </h3>
-                    <div className="space-y-1">
-                        {AVAILABLE_LESSONS.map((l) => (
-                            <button
-                                key={l.id}
-                                onClick={() => {
-                                    navigate(`/task/${l.id}`);
-                                    setIsMenuOpen(false);
-                                }}
-                                className={cn(
-                                    'w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium transition-colors flex items-center gap-3',
-                                    lesson.id === l.id
-                                        ? 'bg-[var(--color-surface-highlight)] text-[var(--color-primary)]'
-                                        : 'text-stone-600 hover:bg-stone-50'
-                                )}
-                            >
-                                <BookOpen className="w-4 h-4 opacity-50" />
-                                {l.title[lang]}
-                            </button>
-                        ))}
+                    <div className="space-y-2">
+                        {LESSON_CATEGORIES.map((category) => {
+                            const isOpen = openCategoryId === category.id;
+                            const title = t[category.titleKey as keyof typeof t] as string;
+
+                            return (
+                                <div
+                                    key={category.id}
+                                    className="rounded-xl border border-stone-100 bg-white"
+                                >
+                                    <button
+                                        onClick={() =>
+                                            setOpenCategoryId((prev) =>
+                                                prev === category.id ? null : category.id
+                                            )
+                                        }
+                                        className={cn(
+                                            'w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-colors',
+                                            isOpen
+                                                ? 'bg-stone-50 text-stone-900'
+                                                : 'text-stone-700 hover:bg-stone-50'
+                                        )}
+                                    >
+                                        <span className="flex items-center gap-2 min-w-0">
+                                            <Folder className="w-4 h-4 text-stone-400 shrink-0" />
+                                            <span className="truncate">{title}</span>
+                                        </span>
+                                        <ChevronDown
+                                            className={cn(
+                                                'w-4 h-4 text-stone-400 transition-transform shrink-0',
+                                                isOpen && 'rotate-180'
+                                            )}
+                                        />
+                                    </button>
+
+                                    <AnimatePresence initial={false}>
+                                        {isOpen && (
+                                            <motion.div
+                                                initial={{ height: 0, opacity: 0 }}
+                                                animate={{ height: 'auto', opacity: 1 }}
+                                                exit={{ height: 0, opacity: 0 }}
+                                                transition={{ duration: 0.18 }}
+                                                className="overflow-hidden"
+                                            >
+                                                <div className="px-2 pb-2 space-y-1">
+                                                    {category.lessons.map((l) => (
+                                                        <button
+                                                            key={l.id}
+                                                            onClick={() => {
+                                                                navigate(`/task/${l.id}`);
+                                                                setIsMenuOpen(false);
+                                                            }}
+                                                            className={cn(
+                                                                'w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium transition-colors flex items-center gap-3',
+                                                                lesson.id === l.id
+                                                                    ? 'bg-[var(--color-surface-highlight)] text-[var(--color-primary)]'
+                                                                    : 'text-stone-600 hover:bg-stone-50'
+                                                            )}
+                                                        >
+                                                            <BookOpen className="w-4 h-4 opacity-50" />
+                                                            {l.title[lang]}
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
+                                </div>
+                            );
+                        })}
                     </div>
                 </div>
             </Drawer>

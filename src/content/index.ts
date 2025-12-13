@@ -11,6 +11,9 @@ import seqD from './progressions/seq-d.md?raw';
 import seqE from './progressions/seq-e.md?raw';
 import seqF from './progressions/seq-f.md?raw';
 
+import jazzIIVI from './progressions/jazz-ii-v-i.md?raw';
+import jazzTurnaround from './progressions/jazz-turnaround.md?raw';
+
 // Progression content (EN)
 import seqAEn from './en/progressions/seq-a.md?raw';
 import seqBEn from './en/progressions/seq-b.md?raw';
@@ -18,6 +21,9 @@ import seqCEn from './en/progressions/seq-c.md?raw';
 import seqDEn from './en/progressions/seq-d.md?raw';
 import seqEEn from './en/progressions/seq-e.md?raw';
 import seqFEn from './en/progressions/seq-f.md?raw';
+
+import jazzIIVIEn from './en/progressions/jazz-ii-v-i.md?raw';
+import jazzTurnaroundEn from './en/progressions/jazz-turnaround.md?raw';
 
 // Chord content
 import T53 from './chords/T53.md?raw';
@@ -37,6 +43,12 @@ import VII7 from './chords/VII7.md?raw';
 import VII43 from './chords/VII43.md?raw';
 import VII2 from './chords/VII2.md?raw';
 
+// Jazz chord label content
+import ii7 from './chords/ii7.md?raw';
+import V7 from './chords/V7.md?raw';
+import Imaj7 from './chords/Imaj7.md?raw';
+import vi7 from './chords/vi7.md?raw';
+
 // Chord content (EN)
 import T53En from './en/chords/T53.md?raw';
 import T6En from './en/chords/T6.md?raw';
@@ -54,6 +66,12 @@ import II43En from './en/chords/II43.md?raw';
 import VII7En from './en/chords/VII7.md?raw';
 import VII43En from './en/chords/VII43.md?raw';
 import VII2En from './en/chords/VII2.md?raw';
+
+// Jazz chord label content (EN)
+import ii7En from './en/chords/ii7.md?raw';
+import V7En from './en/chords/V7.md?raw';
+import Imaj7En from './en/chords/Imaj7.md?raw';
+import vi7En from './en/chords/vi7.md?raw';
 
 // Harmonic chord content (гармонический мажор)
 import II2Harm from './chords/II2-harm.md?raw';
@@ -79,6 +97,8 @@ export const progressionContent: Record<string, string> = {
     'seq-d': seqD,
     'seq-e': seqE,
     'seq-f': seqF,
+    'jazz-ii-v-i': jazzIIVI,
+    'jazz-turnaround': jazzTurnaround,
 };
 
 const progressionContentEn: Record<string, string> = {
@@ -88,6 +108,8 @@ const progressionContentEn: Record<string, string> = {
     'seq-d': seqDEn,
     'seq-e': seqEEn,
     'seq-f': seqFEn,
+    'jazz-ii-v-i': jazzIIVIEn,
+    'jazz-turnaround': jazzTurnaroundEn,
 };
 
 // Chord content map
@@ -121,6 +143,12 @@ export const chordContent: Record<string, string> = {
     'VII7-harm': VII7Harm,
     'VII43-harm': VII43Harm,
     'VII2-harm': VII2Harm,
+
+    // Jazz labels
+    ii7,
+    V7,
+    Imaj7,
+    vi7,
 };
 
 const chordContentEn: Record<string, string> = {
@@ -153,6 +181,12 @@ const chordContentEn: Record<string, string> = {
     'VII7-harm': VII7HarmEn,
     'VII43-harm': VII43HarmEn,
     'VII2-harm': VII2HarmEn,
+
+    // Jazz labels
+    ii7: ii7En,
+    V7: V7En,
+    Imaj7: Imaj7En,
+    vi7: vi7En,
 };
 
 const progressionContentByLang: Record<Language, Record<string, string>> = {
