@@ -36,7 +36,13 @@ import { ProgressionTracker } from './components/ui/ProgressionTracker';
 import { InfoDrawer } from './components/ui/InfoDrawer';
 import { Drawer } from './components/ui/Drawer';
 import { getProgressionContent, getChordContent } from './content';
-import { JazzIIVILesson, JazzTurnaroundLesson } from './lessons/jazz/progressions';
+import {
+    JazzBackdoorLesson,
+    JazzIIVILesson,
+    JazzRhythmChangesBridgeLesson,
+    JazzTritoneSubLesson,
+    JazzTurnaroundLesson,
+} from './lessons/jazz/progressions';
 import {
     AlteredTriadsLesson,
     SeventhChordsLesson,
@@ -65,7 +71,13 @@ const LESSON_CATEGORIES = [
     {
         id: 'jazz',
         titleKey: 'categoryJazz',
-        lessons: [JazzIIVILesson, JazzTurnaroundLesson],
+        lessons: [
+            JazzIIVILesson,
+            JazzTurnaroundLesson,
+            JazzBackdoorLesson,
+            JazzTritoneSubLesson,
+            JazzRhythmChangesBridgeLesson,
+        ],
     },
 ] as const;
 

@@ -13,6 +13,9 @@ import seqF from './progressions/seq-f.md?raw';
 
 import jazzIIVI from './progressions/jazz-ii-v-i.md?raw';
 import jazzTurnaround from './progressions/jazz-turnaround.md?raw';
+import jazzBackdoor from './progressions/jazz-backdoor.md?raw';
+import jazzTritoneSub from './progressions/jazz-tritone-sub.md?raw';
+import jazzRhythmChangesBridge from './progressions/jazz-rhythm-changes-bridge.md?raw';
 
 // Progression content (EN)
 import seqAEn from './en/progressions/seq-a.md?raw';
@@ -24,6 +27,9 @@ import seqFEn from './en/progressions/seq-f.md?raw';
 
 import jazzIIVIEn from './en/progressions/jazz-ii-v-i.md?raw';
 import jazzTurnaroundEn from './en/progressions/jazz-turnaround.md?raw';
+import jazzBackdoorEn from './en/progressions/jazz-backdoor.md?raw';
+import jazzTritoneSubEn from './en/progressions/jazz-tritone-sub.md?raw';
+import jazzRhythmChangesBridgeEn from './en/progressions/jazz-rhythm-changes-bridge.md?raw';
 
 // Chord content
 import T53 from './chords/T53.md?raw';
@@ -49,6 +55,14 @@ import V7 from './chords/V7.md?raw';
 import Imaj7 from './chords/Imaj7.md?raw';
 import vi7 from './chords/vi7.md?raw';
 
+import bVII7 from './chords/bVII7.md?raw';
+import bII7 from './chords/bII7.md?raw';
+import ivm7 from './chords/ivm7.md?raw';
+import III7 from './chords/III7.md?raw';
+import VOverVi from './chords/V-over-vi.md?raw';
+import VOverIi from './chords/V-over-ii.md?raw';
+import VOverV from './chords/V-over-V.md?raw';
+
 // Chord content (EN)
 import T53En from './en/chords/T53.md?raw';
 import T6En from './en/chords/T6.md?raw';
@@ -72,6 +86,14 @@ import ii7En from './en/chords/ii7.md?raw';
 import V7En from './en/chords/V7.md?raw';
 import Imaj7En from './en/chords/Imaj7.md?raw';
 import vi7En from './en/chords/vi7.md?raw';
+
+import bVII7En from './en/chords/bVII7.md?raw';
+import bII7En from './en/chords/bII7.md?raw';
+import ivm7En from './en/chords/ivm7.md?raw';
+import III7En from './en/chords/III7.md?raw';
+import VOverViEn from './en/chords/V-over-vi.md?raw';
+import VOverIiEn from './en/chords/V-over-ii.md?raw';
+import VOverVEn from './en/chords/V-over-V.md?raw';
 
 // Harmonic chord content (гармонический мажор)
 import II2Harm from './chords/II2-harm.md?raw';
@@ -99,6 +121,9 @@ export const progressionContent: Record<string, string> = {
     'seq-f': seqF,
     'jazz-ii-v-i': jazzIIVI,
     'jazz-turnaround': jazzTurnaround,
+    'jazz-backdoor': jazzBackdoor,
+    'jazz-tritone-sub': jazzTritoneSub,
+    'jazz-rhythm-changes-bridge': jazzRhythmChangesBridge,
 };
 
 const progressionContentEn: Record<string, string> = {
@@ -110,6 +135,9 @@ const progressionContentEn: Record<string, string> = {
     'seq-f': seqFEn,
     'jazz-ii-v-i': jazzIIVIEn,
     'jazz-turnaround': jazzTurnaroundEn,
+    'jazz-backdoor': jazzBackdoorEn,
+    'jazz-tritone-sub': jazzTritoneSubEn,
+    'jazz-rhythm-changes-bridge': jazzRhythmChangesBridgeEn,
 };
 
 // Chord content map
@@ -149,6 +177,14 @@ export const chordContent: Record<string, string> = {
     V7,
     Imaj7,
     vi7,
+
+    bVII7,
+    bII7,
+    ivm7,
+    III7,
+    'V/vi': VOverVi,
+    'V/ii': VOverIi,
+    'V/V': VOverV,
 };
 
 const chordContentEn: Record<string, string> = {
@@ -187,6 +223,14 @@ const chordContentEn: Record<string, string> = {
     V7: V7En,
     Imaj7: Imaj7En,
     vi7: vi7En,
+
+    bVII7: bVII7En,
+    bII7: bII7En,
+    ivm7: ivm7En,
+    III7: III7En,
+    'V/vi': VOverViEn,
+    'V/ii': VOverIiEn,
+    'V/V': VOverVEn,
 };
 
 const progressionContentByLang: Record<Language, Record<string, string>> = {
