@@ -37,13 +37,18 @@ import { InfoDrawer } from './components/ui/InfoDrawer';
 import { Drawer } from './components/ui/Drawer';
 import { getProgressionContent, getChordContent } from './content';
 import { JazzIIVILesson, JazzTurnaroundLesson } from './lessons/jazz/progressions';
+import {
+    AlteredTriadsLesson,
+    SeventhChordsLesson,
+    SusChordsLesson,
+} from './lessons/basic-harmony/common-chords';
 
 // Simple registry for now
 const LESSON_CATEGORIES = [
     {
         id: 'basics',
         titleKey: 'categoryBasics',
-        lessons: [TriadsLesson],
+        lessons: [TriadsLesson, SeventhChordsLesson, SusChordsLesson, AlteredTriadsLesson],
     },
     {
         id: 'classical',
