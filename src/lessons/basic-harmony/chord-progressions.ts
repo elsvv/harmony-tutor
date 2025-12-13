@@ -125,6 +125,7 @@ const KEYS = ['C', 'G', 'F', 'D', 'Bb', 'A', 'Eb', 'E', 'Ab', 'B', 'Db', 'F#'];
 
 const generateQuestionsForSequence = (sequence: typeof SEQUENCE_A, seqName: string, _seqTitle: Record<string, string>): Question[] => {
     const questions: Question[] = [];
+    const sequenceLabels = sequence.map(s => s.label);
     
     KEYS.forEach(key => {
         sequence.forEach((step, idx) => {
@@ -155,7 +156,14 @@ const generateQuestionsForSequence = (sequence: typeof SEQUENCE_A, seqName: stri
                     ru: `Ноты: ${notes.map(n => Note.pitchClass(n)).join(' - ')}`
                 },
                 clef: 'treble',
-                keySignature: key
+                keySignature: key,
+                metadata: {
+                    key: key,
+                    progressionIndex: idx,
+                    progressionTotal: sequence.length,
+                    progressionLabel: step.label,
+                    functionalSequence: sequenceLabels
+                }
             });
         });
     });
@@ -168,6 +176,7 @@ const createLesson = (id: string, sequence: any, name: string, titleEn: string, 
     const qs = generateQuestionsForSequence(sequence, name, { en: titleEn, ru: titleRu });
     return {
         id,
+        type: 'progression',
         title: { en: titleEn, ru: titleRu },
         description: { en: descEn, ru: descRu },
         questions: qs,

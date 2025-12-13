@@ -14,6 +14,7 @@ import { cn } from './lib/utils';
 import ErrorBoundary from './components/ui/ErrorBoundary';
 import { TRANSLATIONS } from './i18n/translations';
 import type { Language } from './i18n/types';
+import { ProgressionTracker } from './components/ui/ProgressionTracker';
 
 // Simple registry for now
 const AVAILABLE_LESSONS = [
@@ -30,10 +31,20 @@ function App() {
   const [feedback, setFeedback] = useState<{ isCorrect: boolean; message: string } | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [lang, setLang] = useState<Language>('en');
+  const [selectedKey, setSelectedKey] = useState('C'); // State for Progression Mode
 
   const t = TRANSLATIONS[lang];
   const currentQuestion = lesson.questions[currentQuestionIndex];
 
+  // Sync selected key when lesson changes slightly or just keep as user preference?
+  // Better to reset 'selectedKey' to C or check if lesson supports it when lesson changes?
+  // For now, persistent preference is fine, but we should make sure the question matches.
+  
+  // Effect to sync currentQuestion if key implies a jump
+  // but simpler logic is: IF progression, we rely on 'selectedKey' to control start of sequence
+  // But 'currentQuestionIndex' is master. 
+  // We need to ensure that when we open a progression lesson, we find the index of the selected key.
+  
   // Sync MIDI notes to user input state
   useEffect(() => {
      setUserNotes(activeNotes);
@@ -92,11 +103,25 @@ function App() {
   const nextQuestion = () => {
     setFeedback(null);
     setUserNotes([]);
-    if (currentQuestionIndex < lesson.questions.length - 1) {
-      setCurrentQuestionIndex(prev => prev + 1);
+    
+    if (lesson.type === 'progression' && currentQuestion?.metadata) {
+        // Find next question in the same key
+        const nextIndex = currentQuestionIndex + 1;
+        if (nextIndex < lesson.questions.length && lesson.questions[nextIndex].metadata?.key === currentQuestion.metadata.key) {
+             setCurrentQuestionIndex(nextIndex);
+        } else {
+             // Loop back to start of this key
+             const startOfKey = lesson.questions.findIndex(q => q.metadata?.key === currentQuestion.metadata?.key);
+             if (startOfKey !== -1) setCurrentQuestionIndex(startOfKey);
+             else setCurrentQuestionIndex(0); // Fallback
+        }
     } else {
-      // Loop back or finish (simple loop for now)
-      setCurrentQuestionIndex(0);
+        // Standard behavior
+        if (currentQuestionIndex < lesson.questions.length - 1) {
+            setCurrentQuestionIndex(prev => prev + 1);
+        } else {
+            setCurrentQuestionIndex(0);
+        }
     }
   };
 
@@ -128,11 +153,19 @@ function App() {
                   <button
                     key={l.id}
                     onClick={() => {
-                      setLesson(l);
-                      setCurrentQuestionIndex(0);
-                      setFeedback(null);
-                      setUserNotes([]);
-                      setIsMenuOpen(false);
+                        setLesson(l);
+                        
+                        // Smart Init for Progression
+                        if (l.type === 'progression') {
+                            const firstQKey = l.questions.findIndex(q => q.metadata?.key === selectedKey);
+                            setCurrentQuestionIndex(firstQKey !== -1 ? firstQKey : 0);
+                        } else {
+                            setCurrentQuestionIndex(0);
+                        }
+                        
+                        setFeedback(null);
+                        setUserNotes([]);
+                        setIsMenuOpen(false);
                     }}
                     className={cn(
                       "w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium transition-colors flex items-center gap-3",
@@ -184,37 +217,156 @@ function App() {
         </div>
       </header>
 
-      <main className="w-full max-w-[1600px] px-6 flex flex-col lg:flex-row gap-6 pb-8 flex-1">
+      <main className="w-full max-w-[1400px] px-6 pb-6 flex-1 flex flex-col gap-4 mx-auto">
         
-        {/* Left Column: Visualization & Input */}
-        <div className="flex-1 space-y-6 min-w-0 flex flex-col">
+        {/* Header: Lesson Info */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 animate-in fade-in slide-in-from-top-4 duration-500">
+            <div>
+                 <div className="flex items-center gap-2 mb-1">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)] bg-stone-100 px-2 py-0.5 rounded-full">{t.currentLesson}</span>
+                 </div>
+                 <h2 className="text-xl md:text-2xl font-bold text-[var(--color-text-primary)] leading-tight">{lesson.title[lang]}</h2>
+                 <p className="text-[var(--color-text-secondary)] mt-1 text-sm leading-relaxed max-w-2xl">{lesson.description[lang]}</p>
+            </div>
+            
+            {/* Simple Progress Counter (Top Right) */}
+            {lesson.type === 'progression' && currentQuestion?.metadata && (
+               <div className="bg-stone-50 px-4 py-2 rounded-lg border border-stone-100 text-right">
+                   <div className="text-[10px] uppercase font-bold text-stone-400">Step</div>
+                   <div className="text-lg font-bold text-[var(--color-primary)]">
+                       {(currentQuestion.metadata.progressionIndex || 0) + 1} <span className="text-stone-300 text-sm">/ {currentQuestion.metadata.progressionTotal}</span>
+                   </div>
+               </div>
+            )}
+        </div>
+
+        {/* Main Interface */}
+        <div className="space-y-4">
           
-          {/* Staff Card */}
-          <div className="card rounded-xl p-6 flex flex-col items-center justify-center min-h-[240px] bg-white relative overflow-hidden shadow-sm border border-stone-100">
-             {/* Subtle grid background for the staff area */}
-             <div className="absolute inset-0 opacity-[0.03] pointer-events-none" 
-                  style={{ backgroundImage: 'radial-gradient(#000 1px, transparent 1px)', backgroundSize: '20px 20px' }}>
+          {/* Top Section: Visualization & Task Split */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+             
+             {/* Left Column: Musical Staff (Visuals) - Takes 5/12 columns */}
+             <div className="lg:col-span-5 card rounded-2xl p-4 bg-stone-50/50 border border-stone-100/50 flex flex-col items-center justify-center relative min-h-[220px]">
+                 <div className="absolute inset-0 opacity-[0.03] pointer-events-none" 
+                      style={{ backgroundImage: 'radial-gradient(#000 1px, transparent 1px)', backgroundSize: '20px 20px' }}>
+                 </div>
+
+                {currentQuestion && (
+                  <ErrorBoundary>
+                     <div className="transform scale-90 md:scale-100 origin-center w-full flex justify-center">
+                        <Staff 
+                        notes={displayNotes.length > 0 ? displayNotes : []} 
+                        clef={currentQuestion.clef}
+                        keySignature={currentQuestion.keySignature}
+                        width={450} 
+                        height={220} // Slightly taller for Grand Staff
+                        />
+                     </div>
+                  </ErrorBoundary>
+                )}
+                
+                <div className="mt-2 h-6 text-[var(--color-text-secondary)] font-medium text-sm tracking-wide bg-white px-4 py-0.5 rounded-full border border-stone-100 shadow-sm">
+                   {displayNotes.length > 0 ? displayNotes.join(" - ") : <span className="opacity-40 italic">{t.playNotes}</span>}
+                </div>
              </div>
 
-            {currentQuestion && (
-              <ErrorBoundary>
-                <Staff 
-                  notes={displayNotes.length > 0 ? displayNotes : []} 
-                  clef={currentQuestion.clef}
-                  keySignature={currentQuestion.keySignature}
-                  width={window.innerWidth > 1000 ? 800 : 600}
-                  height={180}
-                />
-              </ErrorBoundary>
-            )}
-            
-            <div className="mt-4 h-6 text-[var(--color-text-secondary)] font-medium text-base tracking-wide">
-               {displayNotes.length > 0 ? displayNotes.join(" - ") : <span className="opacity-30">{t.playNotes}</span>}
-            </div>
+             {/* Right Column: Task, Progression, Controls - Takes 7/12 columns */}
+             <div className="lg:col-span-7 card rounded-2xl p-6 md:p-8 bg-white shadow-sm border border-stone-100 flex flex-col justify-between gap-6">
+                 
+                 {/* 1. Task Description */}
+                 <div>
+                    <span className="text-xs font-bold uppercase tracking-wider text-[var(--color-text-muted)] mb-2 block">
+                        {t.task}
+                    </span>
+                    <h2 className="text-3xl font-bold text-[var(--color-text-primary)] leading-none tracking-tight">
+                        {currentQuestion ? currentQuestion.text[lang] : t.loading}
+                    </h2>
+                    
+                    {currentQuestion?.hint && (
+                        <div className="mt-4 text-sm text-[var(--color-text-secondary)] italic flex items-center gap-2">
+                             <span className="bg-amber-100/50 text-amber-600 rounded px-1.5 py-0.5 text-xs font-bold not-italic">Hint</span>
+                             <span>{currentQuestion.hint[lang]}</span>
+                        </div>
+                     )}
+                 </div>
+
+                 {/* 2. Progression Tracker (Now embedded here) */}
+                 {lesson.type === 'progression' && currentQuestion && currentQuestion.metadata && (
+                    <div className="border-t border-stone-100 pt-6 mt-2">
+                        <ProgressionTracker 
+                            currentStepIndex={currentQuestion.metadata.progressionIndex || 0}
+                            steps={currentQuestion.metadata.functionalSequence || []}
+                            completedSteps={currentQuestion.metadata.progressionIndex || 0}
+                            availableKeys={['C', 'G', 'F', 'D', 'Bb', 'A', 'Eb', 'E', 'Ab', 'B', 'Db', 'F#']}
+                            selectedKey={selectedKey}
+                            onKeyChange={(k) => {
+                                setSelectedKey(k);
+                                setFeedback(null);
+                                setUserNotes([]);
+                                const firstQIndex = lesson.questions.findIndex(q => q.metadata?.key === k);
+                                if (firstQIndex !== -1) setCurrentQuestionIndex(firstQIndex);
+                            }}
+                            onRestart={() => {
+                                setFeedback(null);
+                                setUserNotes([]);
+                                const firstQIndex = lesson.questions.findIndex(q => q.metadata?.key === selectedKey);
+                                if (firstQIndex !== -1) setCurrentQuestionIndex(firstQIndex);
+                            }}
+                        />
+                    </div>
+                 )}
+                 
+                 {/* 3. Controls (Inline) */}
+                 <div className="flex items-center gap-4 mt-auto pt-2">
+                     {/* Feedback Bubble */}
+                     <div className="flex-1 min-h-[48px] flex items-center">
+                        {feedback ? (
+                             <div className={cn(
+                                 "pl-0 pr-4 py-2 rounded-lg flex items-center gap-3 text-sm font-bold animate-in fade-in slide-in-from-left duration-200",
+                                 feedback.isCorrect ? "text-emerald-700" : "text-red-600"
+                             )}>
+                                 {feedback.isCorrect ? <CheckCircle className="w-5 h-5" /> : <XCircle className="w-5 h-5" />}
+                                 {feedback.message}
+                             </div>
+                        ) : (
+                             <span className="text-stone-300 text-sm italic">Play the notes on the piano below...</span>
+                        )}
+                     </div>
+
+                     <div className="flex items-center gap-3 shrink-0">
+                         <button
+                            onClick={checkAnswer}
+                            disabled={!currentQuestion || feedback?.isCorrect}
+                            className={cn(
+                                "px-6 py-3 rounded-xl font-bold transition-all flex items-center justify-center gap-2 shadow-sm text-sm tracking-wide min-w-[140px]",
+                                feedback?.isCorrect
+                                    ? "bg-stone-100 text-stone-400 cursor-not-allowed"
+                                    : "bg-[var(--color-primary)] text-white hover:opacity-90 hover:scale-[1.02] active:scale-[0.98] shadow-md shadow-indigo-100"
+                            )}
+                        >
+                            <Play className="w-4 h-4 fill-current" /> {t.checkAnswer}
+                        </button>
+
+                        {feedback?.isCorrect && (
+                            <button
+                                onClick={nextQuestion}
+                                className="px-6 py-3 rounded-xl font-bold border-2 border-[var(--color-primary)] text-[var(--color-primary)] hover:bg-[var(--color-primary)] hover:text-white transition-all flex items-center justify-center gap-2 text-sm tracking-wide animate-in fade-in slide-in-from-right duration-300 min-w-[140px]"
+                            >
+                                <RefreshCw className="w-4 h-4" /> 
+                                {lesson.type === 'progression' && ((currentQuestion?.metadata?.progressionIndex || 0) + 1 === currentQuestion?.metadata?.progressionTotal) 
+                                    ? 'Finish' 
+                                    : t.nextQuestion}
+                            </button>
+                        )}
+                     </div>
+                 </div>
+
+             </div>
           </div>
 
-          {/* Piano Card */}
-          <div className="card rounded-xl p-6 bg-white shadow-sm border border-stone-100 flex-1 flex flex-col justify-center">
+          {/* Bottom Section: Piano */}
+          <div className="card rounded-2xl p-4 bg-white shadow-sm border border-stone-100 flex flex-col justify-center overflow-hidden min-h-[220px]">
             <Piano 
               activeNotes={userNotes} 
               onNoteOn={handlePianoToggle} 
@@ -222,85 +374,6 @@ function App() {
               octaves={3}
             />
           </div>
-
-        </div>
-
-        {/* Right Column: Lesson Control */}
-        <div className="w-full lg:w-80 shrink-0 space-y-6">
-            
-            <div className="card rounded-xl p-6 bg-white h-full flex flex-col shadow-sm border border-stone-100">
-                <div className="mb-4">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)] bg-stone-100 px-2 py-1 rounded-full">{t.currentLesson}</span>
-                    <h2 className="text-lg font-bold mt-3 text-[var(--color-text-primary)] leading-tight">{lesson.title[lang]}</h2>
-                    <p className="text-[var(--color-text-secondary)] mt-2 text-xs leading-relaxed">{lesson.description[lang]}</p>
-                </div>
-
-                <div className="flex-1 flex flex-col justify-center py-6 border-t border-b border-[var(--color-border)] my-2 border-dashed">
-                    {currentQuestion ? (
-                        <div className="space-y-3">
-                            <div className="flex justify-between items-center">
-                                <span className="text-xs font-medium text-stone-400">{t.task} {currentQuestionIndex + 1}/{lesson.questions.length}</span>
-                                <div className="h-1.5 w-24 bg-stone-100 rounded-full overflow-hidden">
-                                    <div 
-                                        className="h-full bg-[var(--color-primary)] transition-all duration-300" 
-                                        style={{ width: `${((currentQuestionIndex + 1) / lesson.questions.length) * 100}%` }}
-                                    />
-                                </div>
-                            </div>
-                            
-                            <h3 className="text-lg font-medium text-[var(--color-text-primary)]">
-                                {currentQuestion.text[lang]}
-                            </h3>
-                            
-                            {currentQuestion.hint && (
-                                <div className="text-xs text-[var(--color-text-secondary)] italic bg-stone-50 p-3 rounded border border-stone-100">
-                                    💡 {currentQuestion.hint[lang]}
-                                </div>
-                            )}
-                        </div>
-                    ) : (
-                        <div className="text-center text-[var(--color-text-secondary)]">
-                            {t.loading}
-                        </div>
-                    )}
-                </div>
-
-                <div className="mt-auto space-y-3 pt-4">
-                    {feedback && (
-                        <div className={cn(
-                            "p-3 rounded-lg flex items-center gap-3 text-sm font-medium animate-in fade-in slide-in-from-bottom-2",
-                            feedback.isCorrect 
-                                ? "bg-emerald-50 text-emerald-900 border border-emerald-100" 
-                                : "bg-red-50 text-red-900 border border-red-100"
-                        )}>
-                            {feedback.isCorrect ? <CheckCircle className="w-4 h-4 text-emerald-600" /> : <XCircle className="w-4 h-4 text-red-600" />}
-                            {feedback.message}
-                        </div>
-                    )}
-
-                    <button
-                        onClick={checkAnswer}
-                        disabled={!currentQuestion || feedback?.isCorrect}
-                        className={cn(
-                            "w-full py-2.5 px-4 rounded-lg font-medium transition-all flex items-center justify-center gap-2 shadow-sm text-sm",
-                            feedback?.isCorrect
-                                ? "bg-[var(--color-surface-highlight)] text-[var(--color-text-muted)] cursor-not-allowed"
-                                : "bg-[var(--color-primary)] text-[var(--color-primary-foreground)] hover:opacity-90 hover:shadow-md active:scale-[0.99]"
-                        )}
-                    >
-                        <Play className="w-3.5 h-3.5 fill-current" /> {t.checkAnswer}
-                    </button>
-
-                    {feedback?.isCorrect && (
-                        <button
-                            onClick={nextQuestion}
-                            className="w-full py-2.5 px-4 rounded-lg font-medium border border-[var(--color-border)] text-[var(--color-text-primary)] hover:bg-[var(--color-surface-highlight)] transition-all flex items-center justify-center gap-2 text-sm"
-                        >
-                            <RefreshCw className="w-3.5 h-3.5" /> {t.nextQuestion}
-                        </button>
-                    )}
-                </div>
-            </div>
 
         </div>
 

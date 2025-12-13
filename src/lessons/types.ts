@@ -8,10 +8,18 @@ export interface Question {
   keySignature?: string;
   hint?: LocalizedContent;
   validate: (notes: string[]) => boolean;
+  metadata?: {
+    key?: string;
+    progressionIndex?: number;
+    progressionTotal?: number;
+    progressionLabel?: string; 
+    functionalSequence?: string[]; // Array of labels for the whole sequence
+  };
 }
 
 export interface Lesson {
   id: string;
+  type?: 'standard' | 'progression';
   title: LocalizedContent;
   description: LocalizedContent;
   questions: Question[];
