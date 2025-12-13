@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Routes, Route, Navigate, useParams, useNavigate } from 'react-router-dom';
 import Staff from './components/music/Staff';
 import Piano from './components/music/Piano';
 import { useMidi } from './engine/MidiManager';
@@ -8,7 +9,7 @@ import {
   LessonSequenceD, LessonSequenceE, LessonSequenceF 
 } from './lessons/basic-harmony/chord-progressions';
 import { MusicTheory } from './engine/MusicTheory';
-import { type Lesson } from './lessons/types';
+
 import { Play, RefreshCw, CheckCircle, XCircle, Menu, Music, BookOpen, Languages } from 'lucide-react';
 import { cn } from './lib/utils';
 import ErrorBoundary from './components/ui/ErrorBoundary';
@@ -23,9 +24,17 @@ const AVAILABLE_LESSONS = [
   LessonSequenceD, LessonSequenceE, LessonSequenceF
 ];
 
-function App() {
+function LessonApp() {
   const { activeNotes, midiEnabled } = useMidi();
-  const [lesson, setLesson] = useState<Lesson>(TriadsLesson);
+  const { taskId } = useParams();
+  const navigate = useNavigate();
+  
+  // Derived state from URL, fallback to first lesson if not found (or handle 404)
+  const lesson = AVAILABLE_LESSONS.find(l => l.id === taskId) || AVAILABLE_LESSONS[0];
+
+  // We don't need lesson state anymore, we use the derived one.
+  // const [lesson, setLesson] = useState<Lesson>(TriadsLesson);
+  
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [userNotes, setUserNotes] = useState<string[]>([]);
   const [feedback, setFeedback] = useState<{ isCorrect: boolean; message: string } | null>(null);
@@ -125,6 +134,29 @@ function App() {
     }
   };
 
+  // Reset state when lesson (taskId) changes
+  useEffect(() => {
+     setFeedback(null);
+     setUserNotes([]);
+     
+     // Smart Init for Progression
+     if (lesson.type === 'progression') {
+         const firstQKey = lesson.questions.findIndex(q => q.metadata?.key === selectedKey);
+         setCurrentQuestionIndex(firstQKey !== -1 ? firstQKey : 0);
+     } else {
+         setCurrentQuestionIndex(0);
+     }
+  }, [lesson.id, selectedKey]); // selectedKey dependency allows re-init if key changes? Maybe not desired. 
+  // Actually, original code only did this on "Click".
+  // If we change key via "ProgressionTracker", we manually set index.
+  // So here we only want to run this when `lesson.id` changes.
+  // But wait, if I change `selectedKey` globally (it's state), and then switch lesson, I want it to respect that key.
+  // So [lesson.id] is correct dependency. But inside we use `selectedKey`.
+  
+  // Note: We need to be careful not to reset if we just navigated to the SAME lesson? 
+  // But usage of `lesson.id` ensures we only reset on change.
+
+
   // Ensure a question is loaded when the component mounts
   useEffect(() => {
     if (!currentQuestion && lesson.questions.length > 0) {
@@ -153,19 +185,9 @@ function App() {
                   <button
                     key={l.id}
                     onClick={() => {
-                        setLesson(l);
-                        
-                        // Smart Init for Progression
-                        if (l.type === 'progression') {
-                            const firstQKey = l.questions.findIndex(q => q.metadata?.key === selectedKey);
-                            setCurrentQuestionIndex(firstQKey !== -1 ? firstQKey : 0);
-                        } else {
-                            setCurrentQuestionIndex(0);
-                        }
-                        
-                        setFeedback(null);
-                        setUserNotes([]);
+                        navigate(`/task/${l.id}`);
                         setIsMenuOpen(false);
+                        // State resets handled by useEffect on taskId change
                     }}
                     className={cn(
                       "w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium transition-colors flex items-center gap-3",
@@ -379,6 +401,16 @@ function App() {
 
       </main>
     </div>
+  );
+}
+
+function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<Navigate to={`/task/${AVAILABLE_LESSONS[0].id}`} replace />} />
+      <Route path="/task/:taskId" element={<LessonApp />} />
+      <Route path="*" element={<Navigate to={`/task/${AVAILABLE_LESSONS[0].id}`} replace />} />
+    </Routes>
   );
 }
 
