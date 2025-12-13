@@ -8,11 +8,20 @@ interface InfoDrawerProps {
     onClose: () => void;
     title?: string;
     content: string | null;
+    fallbackTitle?: string;
+    emptyText?: string;
 }
 
-export const InfoDrawer: React.FC<InfoDrawerProps> = ({ isOpen, onClose, title, content }) => {
+export const InfoDrawer: React.FC<InfoDrawerProps> = ({
+    isOpen,
+    onClose,
+    title,
+    content,
+    fallbackTitle = 'Информация',
+    emptyText = 'Информация недоступна',
+}) => {
     return (
-        <Drawer isOpen={isOpen} onClose={onClose} side="right" title={title || 'Информация'}>
+        <Drawer isOpen={isOpen} onClose={onClose} side="right" title={title || fallbackTitle}>
             {content ? (
                 <div className="px-6 py-4">
                     <ReactMarkdown
@@ -111,7 +120,7 @@ export const InfoDrawer: React.FC<InfoDrawerProps> = ({ isOpen, onClose, title, 
                 </div>
             ) : (
                 <div className="text-center text-stone-400 py-12">
-                    <p>Информация недоступна</p>
+                    <p>{emptyText}</p>
                 </div>
             )}
         </Drawer>

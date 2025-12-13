@@ -11,6 +11,9 @@ interface ProgressionTrackerProps {
     onKeyChange: (key: string) => void;
     onRestart: () => void;
     onChordInfoClick?: (label: string) => void; // Callback when info button is clicked
+    keyLabel?: string;
+    restartTitle?: string;
+    chordInfoTitleTemplate?: string;
     className?: string;
 }
 
@@ -22,6 +25,9 @@ export const ProgressionTracker: React.FC<ProgressionTrackerProps> = ({
     onKeyChange,
     onRestart,
     onChordInfoClick,
+    keyLabel = 'Key:',
+    restartTitle = 'Restart sequence',
+    chordInfoTitleTemplate = 'Info about {label}',
     className,
 }) => {
     const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -47,7 +53,7 @@ export const ProgressionTracker: React.FC<ProgressionTrackerProps> = ({
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                     <span className="text-[10px] font-bold text-stone-400 uppercase tracking-wider">
-                        Key:
+                        {keyLabel}
                     </span>
                     <select
                         value={selectedKey}
@@ -65,7 +71,7 @@ export const ProgressionTracker: React.FC<ProgressionTrackerProps> = ({
                 <button
                     onClick={onRestart}
                     className="p-1 text-stone-400 hover:text-[var(--color-primary)] hover:bg-stone-50 rounded-full transition-colors"
-                    title="Restart Sequence"
+                    title={restartTitle}
                 >
                     <RefreshCw className="w-3.5 h-3.5" />
                 </button>
@@ -117,7 +123,7 @@ export const ProgressionTracker: React.FC<ProgressionTrackerProps> = ({
                                                 isPassed && 'hover:bg-emerald-100',
                                                 isFuture && 'hover:bg-stone-100'
                                             )}
-                                            title={`Информация о ${label}`}
+                                            title={chordInfoTitleTemplate.replace('{label}', label)}
                                         >
                                             <Info className="w-3 h-3" />
                                         </button>

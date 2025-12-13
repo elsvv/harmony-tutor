@@ -300,10 +300,10 @@ function LessonApp() {
                         <button
                             onClick={() => setIsLessonInfoOpen(true)}
                             className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-stone-200 bg-white hover:bg-stone-50 hover:border-[var(--color-primary)] text-stone-600 hover:text-[var(--color-primary)] transition-all group"
-                            title="Информация об уроке"
+                            title={t.lessonInfoTitle}
                         >
                             <Info className="w-4 h-4" />
-                            <span className="text-sm font-medium">О прогрессии</span>
+                            <span className="text-sm font-medium">{t.progressionInfo}</span>
                         </button>
                     )}
                 </div>
@@ -359,7 +359,7 @@ function LessonApp() {
                                 {currentQuestion?.hint && (
                                     <div className="mt-4 text-sm text-[var(--color-text-secondary)] italic flex items-center gap-2">
                                         <span className="bg-amber-100/50 text-amber-600 rounded px-1.5 py-0.5 text-xs font-bold not-italic">
-                                            Hint
+                                            {t.hint}
                                         </span>
                                         <span>{currentQuestion.hint[lang]}</span>
                                     </div>
@@ -419,6 +419,9 @@ function LessonApp() {
                                                 setActiveChordLabel(label);
                                                 setIsChordInfoOpen(true);
                                             }}
+                                            keyLabel={t.keyLabel}
+                                            restartTitle={t.restartSequence}
+                                            chordInfoTitleTemplate={t.chordInfoTitle}
                                         />
                                     </div>
                                 )}
@@ -445,7 +448,7 @@ function LessonApp() {
                                         </div>
                                     ) : (
                                         <span className="text-stone-300 text-sm italic">
-                                            Play the notes on the piano below...
+                                            {t.playOnPiano}
                                         </span>
                                     )}
                                 </div>
@@ -474,7 +477,7 @@ function LessonApp() {
                                             (currentQuestion?.metadata?.progressionIndex || 0) +
                                                 1 ===
                                                 currentQuestion?.metadata?.progressionTotal
-                                                ? 'Finish'
+                                                ? t.finish
                                                 : t.nextQuestion}
                                         </button>
                                     )}
@@ -500,7 +503,9 @@ function LessonApp() {
                 isOpen={isLessonInfoOpen}
                 onClose={() => setIsLessonInfoOpen(false)}
                 title={lesson.title[lang]}
-                content={getProgressionContent(lesson.id)}
+                content={getProgressionContent(lesson.id, lang)}
+                fallbackTitle={t.info}
+                emptyText={t.infoUnavailable}
             />
 
             {/* Chord Info Drawer */}
@@ -510,8 +515,10 @@ function LessonApp() {
                     setIsChordInfoOpen(false);
                     setActiveChordLabel(null);
                 }}
-                title={activeChordLabel || 'Аккорд'}
-                content={activeChordLabel ? getChordContent(activeChordLabel) : null}
+                title={activeChordLabel || t.chord}
+                content={activeChordLabel ? getChordContent(activeChordLabel, lang) : null}
+                fallbackTitle={t.info}
+                emptyText={t.infoUnavailable}
             />
         </div>
     );

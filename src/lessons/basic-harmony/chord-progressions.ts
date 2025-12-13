@@ -83,7 +83,7 @@ const generateChord = (key: string, func: any, inv: any, harm: boolean): string[
 const SEQUENCE_A = [
     { f: 'T', i: '53', h: false, label: 'T53' },
     { f: 'S', i: '64', h: false, label: 'S64' },
-    { f: 'II', i: '2', h: true, label: 'II2 (harm)' },
+    { f: 'II', i: '2', h: true, label: 'II2-harm' },
     { f: 'D', i: '65', h: false, label: 'D65' },
     { f: 'T', i: '53', h: false, label: 'T53' },
 ] as const;
@@ -91,7 +91,7 @@ const SEQUENCE_A = [
 const SEQUENCE_B = [
     { f: 'T', i: '6', h: false, label: 'T6' },
     { f: 'S', i: '53', h: false, label: 'S53' },
-    { f: 'II', i: '65', h: true, label: 'II65 (harm)' },
+    { f: 'II', i: '65', h: true, label: 'II65-harm' },
     { f: 'D', i: '2', h: false, label: 'D2' },
     { f: 'T', i: '6', h: false, label: 'T6' },
 ] as const;
@@ -99,7 +99,7 @@ const SEQUENCE_B = [
 const SEQUENCE_C = [
     { f: 'T', i: '64', h: false, label: 'T64' },
     { f: 'S', i: '6', h: false, label: 'S6' },
-    { f: 'II', i: '43', h: true, label: 'II43 (harm)' },
+    { f: 'II', i: '43', h: true, label: 'II43-harm' },
     { f: 'D', i: '7', h: false, label: 'D7' },
     { f: 'T', i: '3', h: false, label: 'T3' },
 ] as const;
@@ -107,8 +107,8 @@ const SEQUENCE_C = [
 const SEQUENCE_D = [
     { f: 'T', i: '53', h: false, label: 'T53' },
     { f: 'S', i: '64', h: false, label: 'S64' },
-    { f: 'II', i: '2', h: true, label: 'II2 (harm)' },
-    { f: 'VII', i: '7', h: true, label: 'VII7 (harm)' },
+    { f: 'II', i: '2', h: true, label: 'II2-harm' },
+    { f: 'VII', i: '7', h: true, label: 'VII7-harm' },
     { f: 'D', i: '65', h: false, label: 'D65' },
     { f: 'T', i: '53', h: false, label: 'T53' },
 ] as const;
@@ -116,8 +116,8 @@ const SEQUENCE_D = [
 const SEQUENCE_E = [
     { f: 'T', i: '6', h: false, label: 'T6' },
     { f: 'S', i: '53', h: false, label: 'S53' },
-    { f: 'II', i: '65', h: true, label: 'II65 (harm)' },
-    { f: 'VII', i: '43', h: true, label: 'VII43 (harm)' },
+    { f: 'II', i: '65', h: true, label: 'II65-harm' },
+    { f: 'VII', i: '43', h: true, label: 'VII43-harm' },
     { f: 'D', i: '2', h: false, label: 'D2' },
     { f: 'T', i: '6', h: false, label: 'T6' },
 ] as const;
@@ -125,8 +125,8 @@ const SEQUENCE_E = [
 const SEQUENCE_F = [
     { f: 'T', i: '64', h: false, label: 'T64' },
     { f: 'S', i: '6', h: false, label: 'S6' },
-    { f: 'II', i: '43', h: true, label: 'II43 (harm)' },
-    { f: 'VII', i: '2', h: true, label: 'VII2 (harm)' },
+    { f: 'II', i: '43', h: true, label: 'II43-harm' },
+    { f: 'VII', i: '2', h: true, label: 'VII2-harm' },
     { f: 'D', i: '7', h: false, label: 'D7' },
     { f: 'T', i: '3', h: false, label: 'T3' },
 ] as const;
