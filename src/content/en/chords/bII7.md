@@ -1,5 +1,12 @@
 # ♭II7 — Tritone substitution dominant
 
+## How to read the label
+
+`♭II7` (app label: `bII7`) breaks down as:
+
+-   `♭II` / `bII` — the **flattened 2nd scale degree** (scale degree 2 lowered by a semitone).
+-   `7` — a **dominant seventh** chord quality (major triad + minor 7th).
+
 ## What it is
 
 **♭II7** is a dominant seventh chord built on the flattened 2nd degree. In jazz it’s most often used as a **tritone substitution** for V7.

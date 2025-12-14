@@ -1,10 +1,19 @@
-# Rhythm changes bridge (dominant chain): III7 → VI7 → II7 → V7
+# Rhythm changes bridge (dominant chain): V/vi → V/ii → V/V → V7
 
 ## Overview
 
 In **Rhythm Changes** (based on I Got Rhythm), the bridge often uses a **dominant chain** moving around the circle of fifths:
 
--   **III7 → VI7 → II7 → V7**
+-   **V/vi → V/ii → V/V → V7**
+
+## How to read the labels
+
+-   `V/vi` — a **secondary dominant**: the dominant (V7) of the `vi` chord.
+-   `V/ii` — the dominant of the `ii` chord.
+-   `V/V` — the dominant of the dominant.
+-   `V7` — the main dominant in the key (a dominant 7th chord).
+
+_Note: you may also see this chain written as III7 → VI7 → II7 → V7. Here the labels use the slash form: `V/vi → V/ii → V/V → V7`._
 
 In C major:
 

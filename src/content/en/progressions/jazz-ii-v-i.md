@@ -4,6 +4,14 @@
 
 **ii–V–I** is the most important and most common jazz harmonic formula. You’ll find it in standards, bebop, ballads — basically everywhere. Compared to classical harmony, the main difference is the “jazz shell”: **seventh chords**.
 
+## How to read the labels
+
+-   `ii7` — a chord on **scale degree 2** in major; lowercase `ii` means minor quality, and `7` means it’s a **seventh chord**.
+-   `V7` — the dominant on **scale degree 5**; `7` means a dominant 7th chord (the 7th adds tension).
+-   `Imaj7` — the tonic on **scale degree 1**; `maj7` means a **major 7th** above the root.
+
+For example, in C major: **Dm7 → G7 → Cmaj7**.
+
 ## Structure
 
 | Step | Degree | Chord quality | Function    |

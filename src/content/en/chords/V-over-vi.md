@@ -1,5 +1,14 @@
 # V/vi — Secondary dominant to vi
 
+## How to read the label
+
+`V/vi` breaks down as:
+
+-   `V` — the dominant chord.
+-   `/vi` — “of vi”: the target chord is `vi`.
+
+So `V/vi` means “dominant of vi” (a secondary dominant): it’s typically a dominant 7th chord that resolves to `vi`.
+
 ## What it is
 
 **V/vi** (“five of six”) is a dominant 7th chord that resolves to the **vi** chord.

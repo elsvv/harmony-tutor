@@ -1,5 +1,14 @@
 # V/V — Dominant of the dominant
 
+## How to read the label
+
+`V/V` breaks down as:
+
+-   `V` — the dominant chord.
+-   `/V` — “of V”: the target chord is `V`.
+
+So `V/V` means “dominant of the dominant” (a secondary dominant): it’s typically a dominant 7th chord that resolves to `V7`.
+
 ## What it is
 
 **V/V** is a dominant 7th chord that resolves to **V7**.

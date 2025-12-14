@@ -1,5 +1,12 @@
 # ii7 — Minor seventh chord on scale degree II
 
+## How to read the label
+
+`ii7` breaks down as:
+
+-   `ii` — scale degree II written in **lowercase**, which indicates a **minor** chord quality.
+-   `7` — a 7th chord (a 7th is added to the triad). In major keys this is typically a **minor seventh** chord (m7).
+
 ## Role in jazz
 
 In a major key, **ii7** is the standard **predominant** chord. It gently prepares the dominant and almost always moves to **V7**.

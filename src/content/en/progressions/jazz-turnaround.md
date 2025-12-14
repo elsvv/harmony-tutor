@@ -4,6 +4,13 @@
 
 **I–vi–ii–V** is a classic jazz **turnaround** — a loopable phrase ending that naturally brings the harmony back to I. Think of it as a small orbit around the tonic: tonic → tonic substitute (vi) → predominant (ii) → dominant (V).
 
+## How to read the labels
+
+-   `Imaj7` — the tonic on **scale degree 1**; `maj7` means a **major 7th** above the root.
+-   `vi7` — a chord on **scale degree 6**; lowercase `vi` means minor quality, and `7` means a seventh chord.
+-   `ii7` — a chord on **scale degree 2**; lowercase `ii` means minor quality, and `7` means a seventh chord.
+-   `V7` — the dominant on **scale degree 5**; `7` means a dominant 7th chord.
+
 ## Structure
 
 | Step | Degree | Chord quality | Role             |

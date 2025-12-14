@@ -1,5 +1,13 @@
 # II2-harm — Supertonic 2 chord in harmonic major
 
+## How to read the label
+
+`II2-harm` breaks down as:
+
+-   `II` — the scale degree (supertonic), used here as a predominant sonority.
+-   `2` — the “2 chord” inversion of a 7th chord (third inversion): the **7th** is in the bass, and the figure highlights the interval of a **2nd** above the bass.
+-   `-harm` — harmonic major color: the lowered 6th degree (♭6) is used, creating a characteristic pull **♭6 → 5**.
+
 ## Structure
 
 Third inversion of the II-degree 7th chord in **harmonic major** (lowered 6th):

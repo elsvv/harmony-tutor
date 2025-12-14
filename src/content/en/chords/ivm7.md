@@ -1,5 +1,12 @@
 # ivm7 — Minor iv chord (borrowed from parallel minor)
 
+## How to read the label
+
+`ivm7` breaks down as:
+
+-   `iv` — scale degree IV written in **lowercase**, indicating a **minor** chord (in a major key this is typically borrowed from the parallel minor).
+-   `m7` — minor seventh chord quality: minor triad + minor 7th.
+
 ## What it is
 
 **ivm7** is a minor seventh chord built on the 4th degree in a major key. It’s a classic example of **modal mixture** (borrowing from the parallel minor).

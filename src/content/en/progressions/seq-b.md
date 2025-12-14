@@ -1,18 +1,25 @@
-# T6 → S53 → II65 → D2 → T6
+# T6 → S53 → II65-harm → D2 → T6
 
 ## Progression overview
 
 A variant of the classical pattern that **starts in first inversion** (a “six chord”). This creates a softer, more “floating” character compared to a root-position opening.
 
+## How to read the labels
+
+-   `T6` — tonic (`T`) in first inversion (`6`, a six chord).
+-   `S53` — subdominant (`S`) in root-position triad (`53`).
+-   `II65-harm` — II-degree 7th chord (`II`) in `65` inversion (first inversion) with `-harm` = **harmonic major** (lowered 6th degree, ♭6).
+-   `D2` — dominant (`D`) in `2` inversion (third inversion of a 7th chord).
+
 ## Structure and logic
 
-| Step | Chord | Function         | Bass degree |
-| ---- | ----- | ---------------- | ----------- |
-| 1    | T6    | Tonic            | III         |
-| 2    | S53   | Subdominant      | IV          |
-| 3    | II65  | Subdominant-harm | IV          |
-| 4    | D2    | Dominant         | IV          |
-| 5    | T6    | Tonic            | III         |
+| Step | Chord     | Function         | Bass degree |
+| ---- | --------- | ---------------- | ----------- |
+| 1    | T6        | Tonic            | III         |
+| 2    | S53       | Subdominant      | IV          |
+| 3    | II65-harm | Subdominant-harm | IV          |
+| 4    | D2        | Dominant         | IV          |
+| 5    | T6        | Tonic            | III         |
 
 ## Features
 
@@ -21,7 +28,7 @@ A variant of the classical pattern that **starts in first inversion** (a “six 
 Unlike progression A, the bass is more melodic:
 
 -   **III → IV**: stepwise ascent
--   **IV** is held through S53, II65, D2
+-   **IV** is held through S53, II65-harm, D2
 -   **IV → III**: stepwise descent into the resolution
 
 ### Why T6 instead of T53?
@@ -34,7 +41,7 @@ The tonic in first inversion:
 
 ### Pedal on scale degree IV
 
-The three central chords (S53, II65, D2) keep **scale degree IV in the bass**, which:
+The three central chords (S53, II65-harm, D2) keep **scale degree IV in the bass**, which:
 
 -   smooths the connection between chords
 -   highlights the subdominant area
@@ -44,7 +51,7 @@ The three central chords (S53, II65, D2) keep **scale degree IV in the bass**, w
 
 Listen for the smooth motion in the upper voices:
 
--   the 7th in **II65** resolves down by step
+-   the 7th in **II65-harm** resolves down by step
 -   the leading tone in **D2** resolves up into the tonic
 
 ## Where you meet it

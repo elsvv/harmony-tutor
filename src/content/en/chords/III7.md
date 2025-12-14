@@ -1,5 +1,12 @@
 # III7 — Secondary dominant (dominant chains)
 
+## How to read the label
+
+`III7` breaks down as:
+
+-   `III` — the scale degree (3). The chord root is degree 3.
+-   `7` — dominant seventh chord quality (major triad + minor 7th). In major keys this chord is typically non-diatonic and functions as a secondary dominant.
+
 ## What it is
 
 **III7** is a dominant seventh chord built on the 3rd degree. In major keys it’s typically non-diatonic and functions as a **secondary dominant**, leading to VI.
