@@ -32,6 +32,33 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
         categoryBasics: 'Fundamentals',
         categoryClassical: 'Classical progressions',
         categoryJazz: 'Jazz progressions',
+
+        // Home page
+        heroTagline: 'Interactive Music Theory',
+        heroTitle: 'Master Music Theory Through Practice',
+        heroSubtitle:
+            'From reading notes to understanding complex harmonies — learn at your own pace with interactive exercises and instant feedback.',
+        startLearning: 'Start Learning',
+        viewProgressions: 'Chord Progressions',
+        exerciseTypes: 'Exercise Types',
+        categories: 'Categories',
+        practiceQuestions: 'Practice Questions',
+        exerciseCategories: 'Exercise Categories',
+        categoriesSubtitle:
+            'Choose a category to start practicing. Each exercise generates unlimited questions to help you master the skill.',
+        startExercise: 'Start',
+        progressionsTitle: 'Master Chord Progressions',
+        progressionsSubtitle:
+            'Practice common chord progressions from classical and jazz music. Play along with your MIDI keyboard or on-screen piano.',
+        exploreProgressions: 'Explore Progressions',
+        footerText: '© 2024 Harmony Tutor. Learn music theory the interactive way.',
+        back: 'Back',
+        home: 'Home',
+
+        // Exercise categories
+        categoryStaffReading: 'Staff Reading',
+        categoryIntervals: 'Intervals',
+        categoryScales: 'Scales & Tonality',
     },
     ru: {
         appTitle: 'Гармония Тьютор',
@@ -64,5 +91,32 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
         categoryBasics: 'Основы',
         categoryClassical: 'Классические прогрессии',
         categoryJazz: 'Джазовые прогрессии',
+
+        // Home page
+        heroTagline: 'Интерактивная теория музыки',
+        heroTitle: 'Осваивайте теорию музыки на практике',
+        heroSubtitle:
+            'От чтения нот до понимания сложных гармоний — учитесь в своём темпе с интерактивными упражнениями и мгновенной обратной связью.',
+        startLearning: 'Начать обучение',
+        viewProgressions: 'Аккордовые прогрессии',
+        exerciseTypes: 'Типов упражнений',
+        categories: 'Категорий',
+        practiceQuestions: 'Вопросов для практики',
+        exerciseCategories: 'Категории упражнений',
+        categoriesSubtitle:
+            'Выберите категорию для начала практики. Каждое упражнение генерирует неограниченное количество вопросов.',
+        startExercise: 'Начать',
+        progressionsTitle: 'Освойте аккордовые прогрессии',
+        progressionsSubtitle:
+            'Практикуйте популярные аккордовые прогрессии из классической и джазовой музыки. Играйте на MIDI-клавиатуре или экранном пианино.',
+        exploreProgressions: 'Изучить прогрессии',
+        footerText: '© 2024 Гармония Тьютор. Интерактивное изучение теории музыки.',
+        back: 'Назад',
+        home: 'Главная',
+
+        // Exercise categories
+        categoryStaffReading: 'Чтение нот',
+        categoryIntervals: 'Интервалы',
+        categoryScales: 'Гаммы и тональность',
     },
 };

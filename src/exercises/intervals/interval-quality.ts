@@ -1,0 +1,176 @@
+import { Note } from 'tonal';
+import type { Exercise, ExerciseQuestion, Clef } from '../types';
+
+const ROOT_NOTES = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
+
+// Intervals grouped by number for quality comparison
+const INTERVALS_BY_NUMBER: Record<
+    string,
+    { quality: string; interval: string; semitones: number }[]
+> = {
+    '2nd': [
+        { quality: 'minor', interval: 'm2', semitones: 1 },
+        { quality: 'major', interval: 'M2', semitones: 2 },
+    ],
+    '3rd': [
+        { quality: 'minor', interval: 'm3', semitones: 3 },
+        { quality: 'major', interval: 'M3', semitones: 4 },
+    ],
+    '4th': [
+        { quality: 'perfect', interval: 'P4', semitones: 5 },
+        { quality: 'augmented', interval: 'A4', semitones: 6 },
+    ],
+    '5th': [
+        { quality: 'diminished', interval: 'd5', semitones: 6 },
+        { quality: 'perfect', interval: 'P5', semitones: 7 },
+    ],
+    '6th': [
+        { quality: 'minor', interval: 'm6', semitones: 8 },
+        { quality: 'major', interval: 'M6', semitones: 9 },
+    ],
+    '7th': [
+        { quality: 'minor', interval: 'm7', semitones: 10 },
+        { quality: 'major', interval: 'M7', semitones: 11 },
+    ],
+};
+
+const QUALITY_LABELS: Record<string, { en: string; ru: string }> = {
+    minor: { en: 'minor', ru: 'малую' },
+    major: { en: 'major', ru: 'большую' },
+    perfect: { en: 'perfect', ru: 'чистую' },
+    augmented: { en: 'augmented', ru: 'увеличенную' },
+    diminished: { en: 'diminished', ru: 'уменьшенную' },
+};
+
+const NUMBER_LABELS: Record<string, { en: string; ru: string }> = {
+    '2nd': { en: '2nd', ru: 'секунду' },
+    '3rd': { en: '3rd', ru: 'терцию' },
+    '4th': { en: '4th', ru: 'кварту' },
+    '5th': { en: '5th', ru: 'квинту' },
+    '6th': { en: '6th', ru: 'сексту' },
+    '7th': { en: '7th', ru: 'септиму' },
+};
+
+function shuffle<T>(array: T[]): T[] {
+    const result = [...array];
+    for (let i = result.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [result[i], result[j]] = [result[j], result[i]];
+    }
+    return result;
+}
+
+function generateOptions(correctNote: string, rootNote: string, intervalNumber: string): string[] {
+    const options = [correctNote];
+
+    // Add notes from different qualities of the same interval number
+    const intervalsOfNumber = INTERVALS_BY_NUMBER[intervalNumber];
+    intervalsOfNumber.forEach((intData) => {
+        const rootMidi = Note.midi(`${rootNote}4`);
+        if (rootMidi) {
+            const noteMidi = rootMidi + intData.semitones;
+            const note = Note.fromMidi(noteMidi);
+            if (note) {
+                const pc = Note.pitchClass(note);
+                if (pc && !options.includes(pc)) {
+                    options.push(pc);
+                }
+            }
+        }
+    });
+
+    // Add some random notes to fill options
+    const allNotes = [
+        'C',
+        'C#',
+        'D',
+        'D#',
+        'E',
+        'F',
+        'F#',
+        'G',
+        'G#',
+        'A',
+        'A#',
+        'B',
+        'Db',
+        'Eb',
+        'Gb',
+        'Ab',
+        'Bb',
+    ];
+    const shuffledNotes = shuffle(allNotes.filter((n) => !options.includes(n)));
+
+    while (options.length < 6 && shuffledNotes.length > 0) {
+        options.push(shuffledNotes.pop()!);
+    }
+
+    return shuffle(options);
+}
+
+function generateQuestion(): ExerciseQuestion {
+    const clef: Clef = Math.random() > 0.5 ? 'treble' : 'bass';
+    const octave = clef === 'treble' ? 4 : 3;
+
+    const rootNote = ROOT_NOTES[Math.floor(Math.random() * ROOT_NOTES.length)];
+    const intervalNumbers = Object.keys(INTERVALS_BY_NUMBER);
+    const intervalNumber = intervalNumbers[Math.floor(Math.random() * intervalNumbers.length)];
+    const intervalsOfNumber = INTERVALS_BY_NUMBER[intervalNumber];
+    const chosenInterval = intervalsOfNumber[Math.floor(Math.random() * intervalsOfNumber.length)];
+
+    const rootWithOctave = `${rootNote}${octave}`;
+    const rootMidi = Note.midi(rootWithOctave);
+
+    if (!rootMidi) {
+        return generateQuestion();
+    }
+
+    const targetMidi = rootMidi + chosenInterval.semitones;
+    const targetNote = Note.fromMidi(targetMidi);
+
+    if (!targetNote) {
+        return generateQuestion();
+    }
+
+    const targetPitchClass = Note.pitchClass(targetNote) || targetNote;
+    const qualityLabel = QUALITY_LABELS[chosenInterval.quality];
+    const numberLabel = NUMBER_LABELS[intervalNumber];
+
+    return {
+        id: `interval-quality-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        type: 'interval-construction',
+        prompt: {
+            en: `From ${rootNote}, make a ${qualityLabel.en} ${numberLabel.en}`,
+            ru: `От ${rootNote} постройте ${qualityLabel.ru} ${numberLabel.ru}`,
+        },
+        clef,
+        keySignature: 'C',
+        displayNotes: [rootWithOctave],
+        correctAnswer: targetPitchClass,
+        options: generateOptions(targetPitchClass, rootNote, intervalNumber),
+        difficulty: 'hard',
+        hint: {
+            en: `A ${qualityLabel.en} ${numberLabel.en} has ${chosenInterval.semitones} semitones`,
+            ru: `${qualityLabel.ru.charAt(0).toUpperCase() + qualityLabel.ru.slice(1)} ${
+                numberLabel.ru
+            } содержит ${chosenInterval.semitones} полутонов`,
+        },
+    };
+}
+
+export const IntervalQualityDrillExercise: Exercise = {
+    id: 'interval-quality-drill',
+    categoryId: 'intervals',
+    title: {
+        en: 'Interval Quality Drill',
+        ru: 'Тренажёр качества интервалов',
+    },
+    description: {
+        en: 'Make a 3rd that is minor, or a 5th that is diminished — same number, different quality.',
+        ru: 'Постройте малую терцию или уменьшенную квинту — одно число, разное качество.',
+    },
+    generateQuestion,
+    settings: {
+        difficulty: 'hard',
+    },
+};
