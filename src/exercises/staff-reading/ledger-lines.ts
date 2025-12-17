@@ -41,34 +41,22 @@ function generateQuestion(): ExerciseQuestion {
     return {
         id: `ledger-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         type: 'note-identification',
-        prompt: {
-            en: 'Name this ledger line note',
-            ru: 'Назовите эту ноту на добавочной линейке',
-        },
+        promptKey: 'exercises.ledgerLines.prompt',
         clef,
         keySignature: 'C',
         displayNotes: [fullNote],
         correctAnswer: noteName,
         options: generateOptions(noteName),
         difficulty: 'hard',
-        hint: {
-            en: 'Notes on ledger lines extend above or below the staff',
-            ru: 'Добавочные линейки расширяют нотоносец вверх или вниз',
-        },
+        hintKey: 'exercises.ledgerLines.hint',
     };
 }
 
 export const LedgerLinesExercise: Exercise = {
     id: 'ledger-lines-trainer',
     categoryId: 'staff-reading',
-    title: {
-        en: 'Ledger Lines Trainer',
-        ru: 'Тренажёр добавочных линеек',
-    },
-    description: {
-        en: 'Notes only above/below the staff — identify quickly for improved fluency.',
-        ru: 'Только ноты выше/ниже нотоносца — определяйте быстро для развития беглости.',
-    },
+    titleKey: 'exercises.ledgerLines.title',
+    descriptionKey: 'exercises.ledgerLines.description',
     generateQuestion,
     settings: {
         includeLedgerLines: true,

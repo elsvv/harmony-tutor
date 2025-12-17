@@ -34,22 +34,7 @@ const INTERVALS_BY_NUMBER: Record<
     ],
 };
 
-const QUALITY_LABELS: Record<string, { en: string; ru: string }> = {
-    minor: { en: 'minor', ru: 'малую' },
-    major: { en: 'major', ru: 'большую' },
-    perfect: { en: 'perfect', ru: 'чистую' },
-    augmented: { en: 'augmented', ru: 'увеличенную' },
-    diminished: { en: 'diminished', ru: 'уменьшенную' },
-};
-
-const NUMBER_LABELS: Record<string, { en: string; ru: string }> = {
-    '2nd': { en: '2nd', ru: 'секунду' },
-    '3rd': { en: '3rd', ru: 'терцию' },
-    '4th': { en: '4th', ru: 'кварту' },
-    '5th': { en: '5th', ru: 'квинту' },
-    '6th': { en: '6th', ru: 'сексту' },
-    '7th': { en: '7th', ru: 'септиму' },
-};
+// Quality and number labels are now in i18n locales under intervals.quality and intervals.number
 
 function shuffle<T>(array: T[]): T[] {
     const result = [...array];
@@ -133,27 +118,23 @@ function generateQuestion(): ExerciseQuestion {
     }
 
     const targetPitchClass = Note.pitchClass(targetNote) || targetNote;
-    const qualityLabel = QUALITY_LABELS[chosenInterval.quality];
-    const numberLabel = NUMBER_LABELS[intervalNumber];
 
     return {
         id: `interval-quality-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         type: 'interval-construction',
-        prompt: {
-            en: `From ${rootNote}, make a ${qualityLabel.en} ${numberLabel.en}`,
-            ru: `От ${rootNote} постройте ${qualityLabel.ru} ${numberLabel.ru}`,
-        },
+        promptKey: 'exercises.intervalQualityDrill.prompt',
+        promptParams: { note: rootNote, quality: chosenInterval.quality, number: intervalNumber },
         clef,
         keySignature: 'C',
         displayNotes: [rootWithOctave],
         correctAnswer: targetPitchClass,
         options: generateOptions(targetPitchClass, rootNote, intervalNumber),
         difficulty: 'hard',
-        hint: {
-            en: `A ${qualityLabel.en} ${numberLabel.en} has ${chosenInterval.semitones} semitones`,
-            ru: `${qualityLabel.ru.charAt(0).toUpperCase() + qualityLabel.ru.slice(1)} ${
-                numberLabel.ru
-            } содержит ${chosenInterval.semitones} полутонов`,
+        hintKey: 'exercises.intervalQualityDrill.hint',
+        hintParams: {
+            quality: chosenInterval.quality,
+            number: intervalNumber,
+            semitones: String(chosenInterval.semitones),
         },
     };
 }
@@ -161,14 +142,8 @@ function generateQuestion(): ExerciseQuestion {
 export const IntervalQualityDrillExercise: Exercise = {
     id: 'interval-quality-drill',
     categoryId: 'intervals',
-    title: {
-        en: 'Interval Quality Drill',
-        ru: 'Тренажёр качества интервалов',
-    },
-    description: {
-        en: 'Make a 3rd that is minor, or a 5th that is diminished — same number, different quality.',
-        ru: 'Постройте малую терцию или уменьшенную квинту — одно число, разное качество.',
-    },
+    titleKey: 'exercises.intervalQualityDrill.title',
+    descriptionKey: 'exercises.intervalQualityDrill.description',
     generateQuestion,
     settings: {
         difficulty: 'hard',

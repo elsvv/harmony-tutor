@@ -1,24 +1,18 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { CheckCircle, XCircle, RefreshCw, ArrowLeft, Zap, Target, Award } from 'lucide-react';
 import Staff from '../music/Staff';
 import { cn } from '../../lib/utils';
 import type { Exercise, ExerciseQuestion } from '../../exercises/types';
-import type { Language } from '../../i18n/types';
 
 interface ExercisePlayerProps {
     exercise: Exercise;
-    lang: Language;
     onBack: () => void;
-    translations: Record<string, string>;
 }
 
-export const ExercisePlayer: React.FC<ExercisePlayerProps> = ({
-    exercise,
-    lang,
-    onBack,
-    translations: t,
-}) => {
+export const ExercisePlayer: React.FC<ExercisePlayerProps> = ({ exercise, onBack }) => {
+    const { t } = useTranslation();
     const [currentQuestion, setCurrentQuestion] = useState<ExerciseQuestion | null>(null);
     const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
     const [feedback, setFeedback] = useState<'correct' | 'incorrect' | null>(null);
@@ -61,7 +55,7 @@ export const ExercisePlayer: React.FC<ExercisePlayerProps> = ({
     if (!currentQuestion) {
         return (
             <div className="flex items-center justify-center h-64">
-                <div className="animate-pulse text-stone-400">{t.loading}</div>
+                <div className="animate-pulse text-stone-400">{t('common.loading')}</div>
             </div>
         );
     }
@@ -77,7 +71,7 @@ export const ExercisePlayer: React.FC<ExercisePlayerProps> = ({
                     className="flex items-center gap-2 text-stone-600 hover:text-stone-900 transition-colors"
                 >
                     <ArrowLeft className="w-5 h-5" />
-                    <span className="font-medium">{t.back}</span>
+                    <span className="font-medium">{t('common.back')}</span>
                 </button>
 
                 <div className="flex items-center gap-6">
@@ -106,8 +100,8 @@ export const ExercisePlayer: React.FC<ExercisePlayerProps> = ({
             <main className="w-full max-w-[900px] mx-auto px-6 py-8">
                 {/* Exercise Title */}
                 <div className="mb-6">
-                    <h1 className="text-2xl font-bold text-stone-900">{exercise.title[lang]}</h1>
-                    <p className="text-stone-500 mt-1">{exercise.description[lang]}</p>
+                    <h1 className="text-2xl font-bold text-stone-900">{t(exercise.titleKey)}</h1>
+                    <p className="text-stone-500 mt-1">{t(exercise.descriptionKey)}</p>
                 </div>
 
                 {/* Question Card */}
@@ -126,18 +120,18 @@ export const ExercisePlayer: React.FC<ExercisePlayerProps> = ({
                     {/* Question */}
                     <div className="p-6">
                         <h2 className="text-xl font-semibold text-stone-800 text-center mb-6">
-                            {currentQuestion.prompt[lang]}
+                            {t(currentQuestion.promptKey, currentQuestion.promptParams)}
                         </h2>
 
                         {/* Hint */}
-                        {currentQuestion.hint && feedback === 'incorrect' && (
+                        {currentQuestion.hintKey && feedback === 'incorrect' && (
                             <motion.div
                                 initial={{ opacity: 0, y: -10 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-xl text-amber-700 text-sm"
                             >
-                                <span className="font-semibold">{t.hint}:</span>{' '}
-                                {currentQuestion.hint[lang]}
+                                <span className="font-semibold">{t('common.hint')}:</span>{' '}
+                                {t(currentQuestion.hintKey, currentQuestion.hintParams)}
                             </motion.div>
                         )}
 
@@ -202,12 +196,12 @@ export const ExercisePlayer: React.FC<ExercisePlayerProps> = ({
                                         {feedback === 'correct' ? (
                                             <>
                                                 <CheckCircle className="w-6 h-6" />
-                                                {t.correct}
+                                                {t('exercise.correct')}
                                             </>
                                         ) : (
                                             <>
                                                 <XCircle className="w-6 h-6" />
-                                                {t.incorrect}
+                                                {t('exercise.incorrect')}
                                             </>
                                         )}
                                     </div>
@@ -217,7 +211,7 @@ export const ExercisePlayer: React.FC<ExercisePlayerProps> = ({
                                         className="px-8 py-3 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition-colors flex items-center gap-2"
                                     >
                                         <RefreshCw className="w-5 h-5" />
-                                        {t.nextQuestion}
+                                        {t('exercise.nextQuestion')}
                                     </button>
                                 </motion.div>
                             )}

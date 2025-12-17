@@ -53,45 +53,27 @@ function generateQuestion(includeRoot: boolean = false): ExerciseQuestion {
     return {
         id: `scale-id-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         type: 'scale-identification',
-        prompt: includeRoot
-            ? {
-                  en: 'What scale is this?',
-                  ru: 'Какая это гамма?',
-              }
-            : {
-                  en: 'Is this scale Major or Minor?',
-                  ru: 'Это мажорная или минорная гамма?',
-              },
+        promptKey: includeRoot
+            ? 'exercises.scaleIdentification.promptAdvanced'
+            : 'exercises.scaleIdentification.promptBasic',
         clef: 'treble',
         keySignature,
         displayNotes,
         correctAnswer,
         options: generateOptions(correctAnswer, includeRoot),
         difficulty: includeRoot ? 'hard' : 'easy',
-        hint: {
-            en:
-                type === 'major'
-                    ? 'Major scales have a bright, happy sound'
-                    : 'Minor scales have a dark, sad sound',
-            ru:
-                type === 'major'
-                    ? 'Мажорные гаммы звучат ярко и радостно'
-                    : 'Минорные гаммы звучат темно и грустно',
-        },
+        hintKey:
+            type === 'major'
+                ? 'exercises.scaleIdentification.hintMajor'
+                : 'exercises.scaleIdentification.hintMinor',
     };
 }
 
 export const ScaleIdentificationExercise: Exercise = {
     id: 'scale-identification',
     categoryId: 'scales',
-    title: {
-        en: 'Scale Identification',
-        ru: 'Определение гамм',
-    },
-    description: {
-        en: 'Show a scale (notes on staff) → choose Major or Natural Minor (+ tonic on harder mode).',
-        ru: 'Показана гамма (ноты на нотоносце) → выберите Мажор или Натуральный минор (+ тонику на сложном уровне).',
-    },
+    titleKey: 'exercises.scaleIdentification.title',
+    descriptionKey: 'exercises.scaleIdentification.description',
     generateQuestion: () => generateQuestion(false),
     settings: {
         difficulty: 'easy',
@@ -101,14 +83,8 @@ export const ScaleIdentificationExercise: Exercise = {
 export const ScaleIdentificationAdvancedExercise: Exercise = {
     id: 'scale-identification-advanced',
     categoryId: 'scales',
-    title: {
-        en: 'Scale Identification (Advanced)',
-        ru: 'Определение гамм (Продвинутый)',
-    },
-    description: {
-        en: 'Identify both the type and root note of the scale.',
-        ru: 'Определите тип и тонику гаммы.',
-    },
+    titleKey: 'exercises.scaleIdentificationAdvanced.title',
+    descriptionKey: 'exercises.scaleIdentificationAdvanced.description',
     generateQuestion: () => generateQuestion(true),
     settings: {
         difficulty: 'hard',

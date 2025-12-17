@@ -39,10 +39,7 @@ function generateHarmonicQuestion(): ExerciseQuestion {
     return {
         id: `interval-harmonic-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         type: 'interval-identification',
-        prompt: {
-            en: 'Name this harmonic interval',
-            ru: 'Назовите этот гармонический интервал',
-        },
+        promptKey: 'exercises.intervalHarmonic.prompt',
         clef,
         keySignature: 'C',
         displayNotes: [rootWithOctave, secondNote],
@@ -50,10 +47,7 @@ function generateHarmonicQuestion(): ExerciseQuestion {
         correctAnswer: interval,
         options: generateOptions(interval),
         difficulty: 'medium',
-        hint: {
-            en: 'Count the distance between the two notes (including both notes)',
-            ru: 'Посчитайте расстояние между двумя нотами (включая обе ноты)',
-        },
+        hintKey: 'exercises.intervalHarmonic.hint',
     };
 }
 
@@ -74,10 +68,7 @@ function generateMelodicQuestion(): ExerciseQuestion {
     return {
         id: `interval-melodic-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         type: 'interval-identification',
-        prompt: {
-            en: 'Name this melodic interval',
-            ru: 'Назовите этот мелодический интервал',
-        },
+        promptKey: 'exercises.intervalMelodic.prompt',
         clef,
         keySignature: 'C',
         displayNotes: [rootWithOctave, secondNote],
@@ -85,24 +76,15 @@ function generateMelodicQuestion(): ExerciseQuestion {
         correctAnswer: interval,
         options: generateOptions(interval),
         difficulty: 'medium',
-        hint: {
-            en: 'This is the distance between two consecutive notes',
-            ru: 'Это расстояние между двумя последовательными нотами',
-        },
+        hintKey: 'exercises.intervalMelodic.hint',
     };
 }
 
 export const HarmonicIntervalExercise: Exercise = {
     id: 'interval-harmonic-identification',
     categoryId: 'intervals',
-    title: {
-        en: 'Interval ID (Harmonic)',
-        ru: 'Интервалы (Гармонические)',
-    },
-    description: {
-        en: 'Two notes stacked (played together) → pick the interval (m3, M3, P5…).',
-        ru: 'Две ноты вместе → выберите интервал (м3, б3, ч5…).',
-    },
+    titleKey: 'exercises.intervalHarmonic.title',
+    descriptionKey: 'exercises.intervalHarmonic.description',
     generateQuestion: generateHarmonicQuestion,
     settings: {
         clefs: ['treble', 'bass'],
@@ -113,14 +95,8 @@ export const HarmonicIntervalExercise: Exercise = {
 export const MelodicIntervalExercise: Exercise = {
     id: 'interval-melodic-identification',
     categoryId: 'intervals',
-    title: {
-        en: 'Interval ID (Melodic)',
-        ru: 'Интервалы (Мелодические)',
-    },
-    description: {
-        en: 'Two consecutive notes on the staff → pick the interval.',
-        ru: 'Две последовательные ноты на нотоносце → выберите интервал.',
-    },
+    titleKey: 'exercises.intervalMelodic.title',
+    descriptionKey: 'exercises.intervalMelodic.description',
     generateQuestion: generateMelodicQuestion,
     settings: {
         clefs: ['treble', 'bass'],

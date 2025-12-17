@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import {
     Music,
     GitCompare,
     TrendingUp,
     ChevronRight,
-    Piano,
     BookOpen,
     Sparkles,
     Target,
@@ -14,15 +14,8 @@ import {
     Zap,
 } from 'lucide-react';
 import { EXERCISE_CATEGORIES } from '../exercises';
-import type { Language } from '../i18n/types';
-import { TRANSLATIONS } from '../i18n/translations';
 import { cn } from '../lib/utils';
-
-interface HomePageProps {
-    lang?: Language;
-    translations?: Record<string, string>;
-    onLanguageToggle?: () => void;
-}
+import { AppLayout } from '../components/layout/AppLayout';
 
 const CATEGORY_ICONS: Record<string, React.ReactNode> = {
     'staff-reading': <Music className="w-6 h-6" />,
@@ -52,37 +45,17 @@ const CATEGORY_COLORS: Record<string, { bg: string; text: string; border: string
         },
     };
 
-const DIFFICULTY_BADGES: Record<string, { label: { en: string; ru: string }; color: string }> = {
-    easy: { label: { en: 'Easy', ru: 'Лёгкий' }, color: 'bg-emerald-100 text-emerald-700' },
-    medium: { label: { en: 'Medium', ru: 'Средний' }, color: 'bg-amber-100 text-amber-700' },
-    hard: { label: { en: 'Hard', ru: 'Сложный' }, color: 'bg-red-100 text-red-700' },
+const DIFFICULTY_COLORS: Record<string, string> = {
+    easy: 'bg-emerald-100 text-emerald-700',
+    medium: 'bg-amber-100 text-amber-700',
+    hard: 'bg-red-100 text-red-700',
 };
 
-export const HomePage: React.FC<HomePageProps> = () => {
-    const [lang, setLang] = useState<Language>('en');
-    const t = TRANSLATIONS[lang];
+export const HomePage: React.FC = () => {
+    const { t } = useTranslation();
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-stone-50 via-white to-indigo-50/30">
-            {/* Header */}
-            <header className="w-full border-b border-stone-100 bg-white/80 backdrop-blur-sm sticky top-0 z-50">
-                <div className="max-w-[1400px] mx-auto px-6 py-4 flex items-center justify-between">
-                    <Link to="/" className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
-                            <Piano className="w-5 h-5 text-white" />
-                        </div>
-                        <span className="text-xl font-bold text-stone-900">{t.appTitle}</span>
-                    </Link>
-
-                    <button
-                        onClick={() => setLang((prev) => (prev === 'en' ? 'ru' : 'en'))}
-                        className="px-3 py-1.5 rounded-full border border-stone-200 bg-white text-stone-600 hover:bg-stone-50 transition-colors text-xs font-medium uppercase"
-                    >
-                        {lang === 'en' ? 'RU' : 'EN'}
-                    </button>
-                </div>
-            </header>
-
+        <AppLayout>
             {/* Hero Section */}
             <section className="w-full max-w-[1400px] mx-auto px-6 py-16 md:py-24">
                 <motion.div
@@ -93,15 +66,15 @@ export const HomePage: React.FC<HomePageProps> = () => {
                 >
                     <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-50 text-indigo-600 text-sm font-medium mb-6">
                         <Sparkles className="w-4 h-4" />
-                        {t.heroTagline}
+                        {t('home.heroTagline')}
                     </div>
 
                     <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-stone-900 leading-tight mb-6">
-                        {t.heroTitle}
+                        {t('home.heroTitle')}
                     </h1>
 
                     <p className="text-lg md:text-xl text-stone-600 leading-relaxed mb-8">
-                        {t.heroSubtitle}
+                        {t('home.heroSubtitle')}
                     </p>
 
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -109,7 +82,7 @@ export const HomePage: React.FC<HomePageProps> = () => {
                             to={`/exercise/${EXERCISE_CATEGORIES[0].exercises[0].id}`}
                             className="px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold rounded-xl hover:opacity-90 transition-opacity shadow-lg shadow-indigo-200 flex items-center gap-2"
                         >
-                            {t.startLearning}
+                            {t('home.startLearning')}
                             <ChevronRight className="w-5 h-5" />
                         </Link>
 
@@ -118,7 +91,7 @@ export const HomePage: React.FC<HomePageProps> = () => {
                             className="px-8 py-4 bg-white border-2 border-stone-200 text-stone-700 font-bold rounded-xl hover:border-stone-300 hover:bg-stone-50 transition-colors flex items-center gap-2"
                         >
                             <BookOpen className="w-5 h-5" />
-                            {t.viewProgressions}
+                            {t('home.viewProgressions')}
                         </Link>
                     </div>
                 </motion.div>
@@ -138,20 +111,22 @@ export const HomePage: React.FC<HomePageProps> = () => {
                                 0
                             )}
                         </div>
-                        <div className="text-stone-500 text-sm mt-1">{t.exerciseTypes}</div>
+                        <div className="text-stone-500 text-sm mt-1">{t('home.exerciseTypes')}</div>
                     </div>
                     <div>
                         <div className="flex items-center justify-center gap-2 text-3xl font-bold text-stone-900">
                             <Award className="w-7 h-7 text-emerald-500" />
                             {EXERCISE_CATEGORIES.length}
                         </div>
-                        <div className="text-stone-500 text-sm mt-1">{t.categories}</div>
+                        <div className="text-stone-500 text-sm mt-1">{t('home.categories')}</div>
                     </div>
                     <div>
                         <div className="flex items-center justify-center gap-2 text-3xl font-bold text-stone-900">
                             <Zap className="w-7 h-7 text-amber-500" />∞
                         </div>
-                        <div className="text-stone-500 text-sm mt-1">{t.practiceQuestions}</div>
+                        <div className="text-stone-500 text-sm mt-1">
+                            {t('home.practiceQuestions')}
+                        </div>
                     </div>
                 </motion.div>
             </section>
@@ -164,10 +139,10 @@ export const HomePage: React.FC<HomePageProps> = () => {
                     transition={{ duration: 0.5, delay: 0.3 }}
                 >
                     <h2 className="text-2xl md:text-3xl font-bold text-stone-900 text-center mb-4">
-                        {t.exerciseCategories}
+                        {t('home.exerciseCategories')}
                     </h2>
                     <p className="text-stone-500 text-center mb-12 max-w-2xl mx-auto">
-                        {t.categoriesSubtitle}
+                        {t('home.categoriesSubtitle')}
                     </p>
 
                     <div className="space-y-8">
@@ -200,10 +175,10 @@ export const HomePage: React.FC<HomePageProps> = () => {
                                             </div>
                                             <div>
                                                 <h3 className="text-xl font-bold text-stone-900">
-                                                    {category.title[lang]}
+                                                    {t(category.titleKey)}
                                                 </h3>
                                                 <p className="text-stone-600 text-sm mt-0.5">
-                                                    {category.description[lang]}
+                                                    {t(category.descriptionKey)}
                                                 </p>
                                             </div>
                                         </div>
@@ -215,7 +190,7 @@ export const HomePage: React.FC<HomePageProps> = () => {
                                             {category.exercises.map((exercise) => {
                                                 const difficulty =
                                                     exercise.settings?.difficulty || 'medium';
-                                                const badge = DIFFICULTY_BADGES[difficulty];
+                                                const badgeColor = DIFFICULTY_COLORS[difficulty];
 
                                                 return (
                                                     <Link
@@ -229,22 +204,22 @@ export const HomePage: React.FC<HomePageProps> = () => {
                                                     >
                                                         <div className="flex items-start justify-between gap-3 mb-2">
                                                             <h4 className="font-semibold text-stone-800 group-hover:text-stone-900">
-                                                                {exercise.title[lang]}
+                                                                {t(exercise.titleKey)}
                                                             </h4>
                                                             <span
                                                                 className={cn(
                                                                     'text-xs font-medium px-2 py-0.5 rounded-full shrink-0',
-                                                                    badge.color
+                                                                    badgeColor
                                                                 )}
                                                             >
-                                                                {badge.label[lang]}
+                                                                {t(`difficulty.${difficulty}`)}
                                                             </span>
                                                         </div>
                                                         <p className="text-sm text-stone-500 line-clamp-2">
-                                                            {exercise.description[lang]}
+                                                            {t(exercise.descriptionKey)}
                                                         </p>
                                                         <div className="mt-3 flex items-center gap-1 text-sm font-medium text-stone-400 group-hover:text-indigo-600 transition-colors">
-                                                            {t.startExercise}
+                                                            {t('exercise.startExercise')}
                                                             <ChevronRight className="w-4 h-4" />
                                                         </div>
                                                     </Link>
@@ -263,17 +238,17 @@ export const HomePage: React.FC<HomePageProps> = () => {
             <section className="w-full bg-gradient-to-br from-indigo-600 to-purple-700 py-16">
                 <div className="max-w-[1400px] mx-auto px-6 text-center">
                     <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
-                        {t.progressionsTitle}
+                        {t('home.progressionsTitle')}
                     </h2>
                     <p className="text-indigo-100 mb-8 max-w-2xl mx-auto">
-                        {t.progressionsSubtitle}
+                        {t('home.progressionsSubtitle')}
                     </p>
                     <Link
                         to="/progressions"
                         className="inline-flex items-center gap-2 px-8 py-4 bg-white text-indigo-600 font-bold rounded-xl hover:bg-indigo-50 transition-colors"
                     >
                         <BookOpen className="w-5 h-5" />
-                        {t.exploreProgressions}
+                        {t('home.exploreProgressions')}
                     </Link>
                 </div>
             </section>
@@ -281,10 +256,10 @@ export const HomePage: React.FC<HomePageProps> = () => {
             {/* Footer */}
             <footer className="w-full border-t border-stone-100 bg-white py-8">
                 <div className="max-w-[1400px] mx-auto px-6 text-center text-stone-500 text-sm">
-                    {t.footerText}
+                    {t('home.footerText')}
                 </div>
             </footer>
-        </div>
+        </AppLayout>
     );
 };
 

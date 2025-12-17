@@ -134,23 +134,18 @@ const SEQUENCE_F = [
 // Ordered by complexity (circle of fifths / practical usage)
 const KEYS = ['C', 'G', 'F', 'D', 'Bb', 'A', 'Eb', 'E', 'Ab', 'B', 'Db', 'F#'];
 
-const generateQuestionsForSequence = (
-    sequence: typeof SEQUENCE_A,
-    seqName: string,
-    _seqTitle: Record<string, string>
-): Question[] => {
+const generateQuestionsForSequence = (sequence: typeof SEQUENCE_A, seqName: string): Question[] => {
     const questions: Question[] = [];
     const sequenceLabels = sequence.map((s) => s.label);
 
     KEYS.forEach((key) => {
         sequence.forEach((step, idx) => {
             const notes = generateChord(key, step.f, step.i, step.h);
+            const noteNames = notes.map((n) => Note.pitchClass(n)).join(' - ');
             questions.push({
                 id: `${seqName}-${key}-${idx}`,
-                text: {
-                    en: `In ${key} Major: Play ${step.label}`,
-                    ru: `В ${key} мажоре: Сыграйте ${step.label}`,
-                },
+                textKey: 'lessons.playChord',
+                textParams: { label: step.label },
                 targetChord: `${key} Major`,
                 validate: (inputNotes) => {
                     if (inputNotes.length === 0) return false;
@@ -170,10 +165,8 @@ const generateQuestionsForSequence = (
 
                     return Note.chroma(sortedInput[0]) === Note.chroma(sortedTarget[0]);
                 },
-                hint: {
-                    en: `Notes: ${notes.map((n) => Note.pitchClass(n)).join(' - ')}`,
-                    ru: `Ноты: ${notes.map((n) => Note.pitchClass(n)).join(' - ')}`,
-                },
+                hintKey: 'lessons.progressionHint',
+                hintParams: { notes: noteNames },
                 clef: 'treble',
                 keySignature: key,
                 metadata: {
@@ -195,17 +188,15 @@ const createLesson = (
     id: string,
     sequence: any,
     name: string,
-    titleEn: string,
-    titleRu: string,
-    descEn: string,
-    descRu: string
+    titleKey: string,
+    descriptionKey: string
 ): Lesson => {
-    const qs = generateQuestionsForSequence(sequence, name, { en: titleEn, ru: titleRu });
+    const qs = generateQuestionsForSequence(sequence, name);
     return {
         id,
         type: 'progression',
-        title: { en: titleEn, ru: titleRu },
-        description: { en: descEn, ru: descRu },
+        titleKey,
+        descriptionKey,
         questions: qs,
         generateQuestion: () => qs[0],
     };
@@ -215,54 +206,42 @@ export const LessonSequenceA = createLesson(
     'seq-a',
     SEQUENCE_A,
     'seq-a',
-    'T53-S64-II2-D65-T53',
-    'T53-S64-II2-D65-T53',
-    'Root position start',
-    'Начало с тоники в основном виде'
+    'lessons.seqA.title',
+    'lessons.seqA.description'
 );
 export const LessonSequenceB = createLesson(
     'seq-b',
     SEQUENCE_B,
     'seq-b',
-    'T6-S53-II65-D2-T6',
-    'T6-S53-II65-D2-T6',
-    '1st Inversion start',
-    'Начало с тонического секстаккорда'
+    'lessons.seqB.title',
+    'lessons.seqB.description'
 );
 export const LessonSequenceC = createLesson(
     'seq-c',
     SEQUENCE_C,
     'seq-c',
-    'T64-S6-II43-D7-T3',
-    'T64-S6-II43-D7-T3',
-    '2nd Inversion start',
-    'Начало с тонического квартсекстаккорда'
+    'lessons.seqC.title',
+    'lessons.seqC.description'
 );
 
 export const LessonSequenceD = createLesson(
     'seq-d',
     SEQUENCE_D,
     'seq-d',
-    'T53-S64-II2-VII7-D65-T53',
-    'T53-S64-II2-VII7-D65-T53',
-    'Extended Sequence A with VII7',
-    'Расширенная А с VII7'
+    'lessons.seqD.title',
+    'lessons.seqD.description'
 );
 export const LessonSequenceE = createLesson(
     'seq-e',
     SEQUENCE_E,
     'seq-e',
-    'T6-S53-II65-VII43-D2-T6',
-    'T6-S53-II65-VII43-D2-T6',
-    'Extended Sequence B with VII43',
-    'Расширенная Б с VII43'
+    'lessons.seqE.title',
+    'lessons.seqE.description'
 );
 export const LessonSequenceF = createLesson(
     'seq-f',
     SEQUENCE_F,
     'seq-f',
-    'T64-S6-II43-VII2-D7-T3',
-    'T64-S6-II43-VII2-D7-T3',
-    'Extended Sequence C with VII2',
-    'Расширенная В с VII2'
+    'lessons.seqF.title',
+    'lessons.seqF.description'
 );

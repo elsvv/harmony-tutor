@@ -67,10 +67,7 @@ function generateKeySignatureQuestion(includeMinor: boolean = false): ExerciseQu
     return {
         id: `key-sig-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         type: 'key-signature',
-        prompt: {
-            en: 'What key is this signature?',
-            ru: 'Какой тональности соответствует этот ключевой знак?',
-        },
+        promptKey: 'exercises.keySignatureIdentification.prompt',
         clef: 'treble',
         keySignature: keyData.key,
         displayNotes: [],
@@ -83,14 +80,8 @@ function generateKeySignatureQuestion(includeMinor: boolean = false): ExerciseQu
 export const KeySignatureIdentificationExercise: Exercise = {
     id: 'key-signature-identification',
     categoryId: 'staff-reading',
-    title: {
-        en: 'Key Signature Identification',
-        ru: 'Определение ключевых знаков',
-    },
-    description: {
-        en: 'Show a key signature → choose the key (Major keys, then add relative minor at harder levels).',
-        ru: 'Показан ключевой знак → выберите тональность (сначала мажор, затем относительный минор).',
-    },
+    titleKey: 'exercises.keySignatureIdentification.title',
+    descriptionKey: 'exercises.keySignatureIdentification.description',
     generateQuestion: () => generateKeySignatureQuestion(false),
     settings: {
         difficulty: 'medium',
@@ -127,47 +118,31 @@ function generateAffectedNotesQuestion(): ExerciseQuestion {
         options.push(wrongNotes.join(', '));
     }
 
+    const isSharp = keyData.sharps > 0;
     return {
         id: `key-notes-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         type: 'key-signature',
-        prompt: {
-            en: `In ${keyData.key} major, which notes are ${
-                keyData.sharps > 0 ? 'sharp' : 'flat'
-            }?`,
-            ru: `В ${keyData.key} мажоре, какие ноты ${
-                keyData.sharps > 0 ? 'диезные' : 'бемольные'
-            }?`,
-        },
+        promptKey: isSharp
+            ? 'exercises.keySignatureNotes.promptSharp'
+            : 'exercises.keySignatureNotes.promptFlat',
+        promptParams: { key: keyData.key },
         clef: 'treble',
         keySignature: keyData.key,
         displayNotes: [],
         correctAnswer,
         options: shuffle(options),
         difficulty: 'hard',
-        hint: {
-            en:
-                keyData.sharps > 0
-                    ? 'Sharps follow the order: F, C, G, D, A, E, B'
-                    : 'Flats follow the order: B, E, A, D, G, C, F',
-            ru:
-                keyData.sharps > 0
-                    ? 'Диезы идут в порядке: F, C, G, D, A, E, B'
-                    : 'Бемоли идут в порядке: B, E, A, D, G, C, F',
-        },
+        hintKey: isSharp
+            ? 'exercises.keySignatureNotes.hintSharp'
+            : 'exercises.keySignatureNotes.hintFlat',
     };
 }
 
 export const KeySignatureNotesExercise: Exercise = {
     id: 'key-signature-notes',
     categoryId: 'staff-reading',
-    title: {
-        en: 'Key Signature: Affected Notes',
-        ru: 'Ключевые знаки: Изменённые ноты',
-    },
-    description: {
-        en: 'Given a key signature, identify which notes are sharp or flat.',
-        ru: 'По ключевому знаку определите, какие ноты диезные или бемольные.',
-    },
+    titleKey: 'exercises.keySignatureNotes.title',
+    descriptionKey: 'exercises.keySignatureNotes.description',
     generateQuestion: generateAffectedNotesQuestion,
     settings: {
         difficulty: 'hard',

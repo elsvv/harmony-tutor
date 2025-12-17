@@ -1,4 +1,5 @@
-import type { LocalizedContent } from '../i18n/types';
+// Translation keys are used instead of LocalizedContent
+// All translations are stored in src/i18n/locales/*.json
 
 // Exercise types - multiple choice based exercises
 export type ExerciseType =
@@ -16,7 +17,8 @@ export type Accidental = 'sharp' | 'flat' | 'natural' | 'none';
 export interface ExerciseQuestion {
     id: string;
     type: ExerciseType;
-    prompt: LocalizedContent;
+    promptKey: string; // i18n translation key
+    promptParams?: Record<string, string>; // Parameters for interpolation
 
     // Visual configuration
     clef?: Clef;
@@ -29,15 +31,16 @@ export interface ExerciseQuestion {
     options: string[]; // Multiple choice options
 
     // Optional metadata
-    hint?: LocalizedContent;
+    hintKey?: string; // i18n translation key for hint
+    hintParams?: Record<string, string>; // Parameters for hint interpolation
     difficulty?: 'easy' | 'medium' | 'hard';
 }
 
 export interface Exercise {
     id: string;
     categoryId: string;
-    title: LocalizedContent;
-    description: LocalizedContent;
+    titleKey: string; // i18n translation key
+    descriptionKey: string; // i18n translation key
     icon?: string;
     generateQuestion: () => ExerciseQuestion;
 
@@ -52,8 +55,8 @@ export interface Exercise {
 
 export interface ExerciseCategory {
     id: string;
-    title: LocalizedContent;
-    description: LocalizedContent;
+    titleKey: string; // i18n translation key
+    descriptionKey: string; // i18n translation key
     icon: string;
     color: string;
     exercises: Exercise[];

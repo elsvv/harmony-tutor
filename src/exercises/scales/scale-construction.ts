@@ -40,48 +40,29 @@ function generateQuestion(): ExerciseQuestion {
     const wrongRoot2 = pickRandom(wrongTypeRoots.filter((r) => r !== root));
     options.push(getScaleNotes(wrongRoot2, wrongType).join(', '));
 
-    const typeLabel =
-        type === 'major'
-            ? { en: 'major', ru: 'мажор' }
-            : { en: 'natural minor', ru: 'натуральный минор' };
-
     return {
         id: `scale-build-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         type: 'scale-construction',
-        prompt: {
-            en: `Build ${root} ${typeLabel.en} scale`,
-            ru: `Постройте гамму ${root} ${typeLabel.ru}`,
-        },
+        promptKey: 'exercises.scaleConstruction.prompt',
+        promptParams: { root, type },
         clef: 'treble',
         keySignature,
         displayNotes: [`${root}4`],
         correctAnswer,
         options: shuffle(options),
         difficulty: 'medium',
-        hint: {
-            en:
-                type === 'major'
-                    ? 'Major scale pattern: W-W-H-W-W-W-H'
-                    : 'Natural minor pattern: W-H-W-W-H-W-W',
-            ru:
-                type === 'major'
-                    ? 'Структура мажорной гаммы: Т-Т-П-Т-Т-Т-П'
-                    : 'Структура натурального минора: Т-П-Т-Т-П-Т-Т',
-        },
+        hintKey:
+            type === 'major'
+                ? 'exercises.scaleConstruction.hintMajor'
+                : 'exercises.scaleConstruction.hintMinor',
     };
 }
 
 export const ScaleConstructionExercise: Exercise = {
     id: 'scale-construction',
     categoryId: 'scales',
-    title: {
-        en: 'Scale Construction',
-        ru: 'Построение гамм',
-    },
-    description: {
-        en: 'Build a scale: "Build G major" → select the correct sequence of notes.',
-        ru: 'Постройте гамму: «Постройте G мажор» → выберите правильную последовательность нот.',
-    },
+    titleKey: 'exercises.scaleConstruction.title',
+    descriptionKey: 'exercises.scaleConstruction.description',
     generateQuestion,
     settings: {
         difficulty: 'medium',

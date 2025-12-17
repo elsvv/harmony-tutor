@@ -1,0 +1,309 @@
+{
+    "common": {
+        "appTitle": "Harmony Tutor",
+        "appSubtitle": "Master music theory through practice.",
+        "back": "Back",
+        "home": "Home",
+        "loading": "Loading questions...",
+        "library": "Library",
+        "info": "Info",
+        "infoUnavailable": "Information is unavailable",
+        "hint": "Hint",
+        "chord": "Chord"
+    },
+    "midi": {
+        "connected": "MIDI Connected",
+        "disconnected": "MIDI Disconnected",
+        "on": "MIDI On",
+        "off": "MIDI Off"
+    },
+    "exercise": {
+        "currentLesson": "Current Lesson",
+        "task": "Task",
+        "of": "of",
+        "checkAnswer": "Check Answer",
+        "nextQuestion": "Next Question",
+        "finish": "Finish",
+        "correct": "Correct!",
+        "incorrect": "Incorrect. Try again!",
+        "playNotes": "Play notes...",
+        "playOnPiano": "Play the notes on the piano below...",
+        "startExercise": "Start",
+        "lessonInfoTitle": "Lesson info"
+    },
+    "progression": {
+        "progressionInfo": "About progression",
+        "keyLabel": "Key:",
+        "restartSequence": "Restart sequence",
+        "chordInfoTitle": "Info about {{label}}"
+    },
+    "home": {
+        "heroTagline": "Interactive Music Theory",
+        "heroTitle": "Master Music Theory Through Practice",
+        "heroSubtitle": "From reading notes to understanding complex harmonies — learn at your own pace with interactive exercises and instant feedback.",
+        "startLearning": "Start Learning",
+        "viewProgressions": "Chord Progressions",
+        "exerciseTypes": "Exercise Types",
+        "categories": "Categories",
+        "practiceQuestions": "Practice Questions",
+        "exerciseCategories": "Exercise Categories",
+        "categoriesSubtitle": "Choose a category to start practicing. Each exercise generates unlimited questions to help you master the skill.",
+        "progressionsTitle": "Master Chord Progressions",
+        "progressionsSubtitle": "Practice common chord progressions from classical and jazz music. Play along with your MIDI keyboard or on-screen piano.",
+        "exploreProgressions": "Explore Progressions",
+        "footerText": "© 2024 Harmony Tutor. Learn music theory the interactive way."
+    },
+    "difficulty": {
+        "easy": "Easy",
+        "medium": "Medium",
+        "hard": "Hard"
+    },
+    "categories": {
+        "basics": "Fundamentals",
+        "classical": "Classical progressions",
+        "jazz": "Jazz progressions",
+        "staffReading": "Staff Reading",
+        "staffReadingDesc": "Learn to read notes on the musical staff quickly and accurately.",
+        "intervals": "Intervals",
+        "intervalsDesc": "Master musical intervals — the building blocks of harmony and melody.",
+        "scales": "Scales & Tonality",
+        "scalesDesc": "Understand scales, keys, and how notes function within a tonal context."
+    },
+    "exercises": {
+        "staffNoteIdentification": {
+            "title": "Staff Note Identification",
+            "description": "Identify single notes on the musical staff. A great starting point for reading music.",
+            "prompt": "Name this note"
+        },
+        "staffNoteClefSwitching": {
+            "title": "Note ID: Treble vs Bass",
+            "description": "Same as above but the clef randomly switches. Train to adapt quickly!",
+            "prompt": "Name this note"
+        },
+        "accidentalReading": {
+            "title": "Accidental Reading",
+            "description": "A note with ♯/♭ appears — identify the sounding note (e.g., \"F#\", \"Bb\").",
+            "prompt": "Name this note (including accidental)"
+        },
+        "ledgerLines": {
+            "title": "Ledger Lines Trainer",
+            "description": "Notes only above/below the staff — identify quickly for improved fluency.",
+            "prompt": "Name this ledger line note",
+            "hint": "Notes on ledger lines extend above or below the staff"
+        },
+        "keySignatureIdentification": {
+            "title": "Key Signature Identification",
+            "description": "Show a key signature → choose the key (Major keys, then add relative minor at harder levels).",
+            "prompt": "What key is this signature?"
+        },
+        "keySignatureNotes": {
+            "title": "Key Signature: Affected Notes",
+            "description": "Given a key signature, identify which notes are sharp or flat.",
+            "promptSharp": "In {{key}} major, which notes are sharp?",
+            "promptFlat": "In {{key}} major, which notes are flat?",
+            "hintSharp": "Sharps follow the order: F, C, G, D, A, E, B",
+            "hintFlat": "Flats follow the order: B, E, A, D, G, C, F"
+        },
+        "intervalHarmonic": {
+            "title": "Interval ID (Harmonic)",
+            "description": "Two notes stacked (played together) → pick the interval (m3, M3, P5…).",
+            "prompt": "Name this harmonic interval",
+            "hint": "Count the distance between the two notes (including both notes)"
+        },
+        "intervalMelodic": {
+            "title": "Interval ID (Melodic)",
+            "description": "Two consecutive notes on the staff → pick the interval.",
+            "prompt": "Name this melodic interval",
+            "hint": "This is the distance between two consecutive notes"
+        },
+        "intervalConstructionUp": {
+            "title": "Interval Construction (Up)",
+            "description": "Given a starting note and target interval (\"Build a P5 up\") → select the second note.",
+            "promptUp": "Build a {{interval}} UP from {{note}}",
+            "hintUp": "Start from {{note}} and count up {{interval}}"
+        },
+        "intervalConstructionDown": {
+            "title": "Interval Construction (Down)",
+            "description": "Same as above, but build the interval downward.",
+            "promptDown": "Build a {{interval}} DOWN from {{note}}",
+            "hintDown": "Start from {{note}} and count down {{interval}}"
+        },
+        "intervalQualityDrill": {
+            "title": "Interval Quality Drill",
+            "description": "Make a 3rd that is minor, or a 5th that is diminished — same number, different quality.",
+            "prompt": "From {{note}}, make a {{quality}} {{number}}",
+            "hint": "A {{quality}} {{number}} has {{semitones}} semitones"
+        },
+        "scaleIdentification": {
+            "title": "Scale Identification",
+            "description": "Show a scale (notes on staff) → choose Major or Natural Minor (+ tonic on harder mode).",
+            "promptBasic": "Is this scale Major or Minor?",
+            "promptAdvanced": "What scale is this?",
+            "hintMajor": "Major scales have a bright, happy sound",
+            "hintMinor": "Minor scales have a dark, sad sound"
+        },
+        "scaleIdentificationAdvanced": {
+            "title": "Scale Identification (Advanced)",
+            "description": "Identify both the type and root note of the scale."
+        },
+        "scaleConstruction": {
+            "title": "Scale Construction",
+            "description": "Build a scale: \"Build G major\" → select the correct sequence of notes.",
+            "prompt": "Build {{root}} {{type}} scale",
+            "hintMajor": "Major scale pattern: W-W-H-W-W-W-H",
+            "hintMinor": "Natural minor pattern: W-H-W-W-H-W-W"
+        },
+        "degreeIdentification": {
+            "title": "Scale Degree Identification",
+            "description": "Given a key (e.g., \"D major\") + one note → choose its scale degree (1–7, or \"non-diatonic\").",
+            "prompt": "In {{key}} major, what scale degree is this note?",
+            "hint": "The {{key}} major scale is: {{notes}}"
+        }
+    },
+    "intervals": {
+        "P1": "Perfect Unison",
+        "m2": "Minor 2nd",
+        "M2": "Major 2nd",
+        "m3": "Minor 3rd",
+        "M3": "Major 3rd",
+        "P4": "Perfect 4th",
+        "A4": "Augmented 4th",
+        "d5": "Diminished 5th",
+        "P5": "Perfect 5th",
+        "m6": "Minor 6th",
+        "M6": "Major 6th",
+        "m7": "Minor 7th",
+        "M7": "Major 7th",
+        "P8": "Perfect Octave",
+        "labels": {
+            "m2": "minor 2nd",
+            "M2": "major 2nd",
+            "m3": "minor 3rd",
+            "M3": "major 3rd",
+            "P4": "perfect 4th",
+            "A4": "augmented 4th",
+            "d5": "diminished 5th",
+            "P5": "perfect 5th",
+            "m6": "minor 6th",
+            "M6": "major 6th",
+            "m7": "minor 7th",
+            "M7": "major 7th",
+            "P8": "perfect octave"
+        },
+        "quality": {
+            "minor": "minor",
+            "major": "major",
+            "perfect": "perfect",
+            "augmented": "augmented",
+            "diminished": "diminished"
+        },
+        "number": {
+            "2nd": "2nd",
+            "3rd": "3rd",
+            "4th": "4th",
+            "5th": "5th",
+            "6th": "6th",
+            "7th": "7th"
+        }
+    },
+    "notes": {
+        "C": "C",
+        "D": "D",
+        "E": "E",
+        "F": "F",
+        "G": "G",
+        "A": "A",
+        "B": "B"
+    },
+    "scaleDegrees": {
+        "1": "1 (Tonic)",
+        "2": "2 (Supertonic)",
+        "3": "3 (Mediant)",
+        "4": "4 (Subdominant)",
+        "5": "5 (Dominant)",
+        "6": "6 (Submediant)",
+        "7": "7 (Leading Tone)"
+    },
+    "scaleTypes": {
+        "major": "major",
+        "minor": "natural minor"
+    },
+    "lessons": {
+        "triads": {
+            "title": "Building Triads",
+            "description": "Learn to build major and minor triads in root position.",
+            "buildTriad": "Build a {{root}} {{type}} Triad",
+            "hintMajor": "A Major triad consists of a root, a major third, and a perfect fifth.",
+            "hintMinor": "A Minor triad consists of a root, a minor third, and a perfect fifth."
+        },
+        "seventhChords": {
+            "title": "Building 7th Chords",
+            "description": "Learn to build the most common seventh chords in root position.",
+            "buildChord": "Build {{root}} {{type}}"
+        },
+        "susChords": {
+            "title": "Building Sus Chords",
+            "description": "Build suspended chords (sus2 and sus4) in different keys."
+        },
+        "alteredTriads": {
+            "title": "Building Diminished / Augmented Triads",
+            "description": "Build diminished (dim) and augmented (aug) triads in different keys."
+        },
+        "seqA": {
+            "title": "Sequence A (I-IV-V-I)",
+            "description": "The most fundamental cadence in Western music."
+        },
+        "seqB": {
+            "title": "Sequence B (I-V⁶₅-I)",
+            "description": "Using the dominant seventh in first inversion."
+        },
+        "seqC": {
+            "title": "Sequence C (I-IV-I⁶₄-V-I)",
+            "description": "The classic cadential 6/4 pattern."
+        },
+        "seqD": {
+            "title": "Sequence D (I-II₂-V-I)",
+            "description": "Adding the supertonic seventh chord."
+        },
+        "seqE": {
+            "title": "Sequence E (I-VI-IV-V-I)",
+            "description": "The classic doo-wop / 50s progression."
+        },
+        "seqF": {
+            "title": "Sequence F (I-IV-VII₇-III-VI-II-V-I)",
+            "description": "Circle of fifths progression."
+        },
+        "jazzIIVI": {
+            "title": "Jazz: ii-V-I",
+            "description": "The most essential jazz progression."
+        },
+        "jazzTurnaround": {
+            "title": "Jazz: I-vi-ii-V Turnaround",
+            "description": "The classic jazz turnaround."
+        },
+        "jazzBackdoor": {
+            "title": "Jazz: Backdoor ii-V",
+            "description": "The backdoor progression (bVII7 to I)."
+        },
+        "jazzTritoneSub": {
+            "title": "Jazz: Tritone Substitution",
+            "description": "Substituting V7 with bII7."
+        },
+        "jazzRhythmBridge": {
+            "title": "Jazz: Rhythm Changes Bridge",
+            "description": "The bridge section of Rhythm Changes."
+        },
+        "playChord": "Play {{label}}",
+        "progressionHint": "Notes: {{notes}}",
+        "chordHints": {
+            "maj7": "Major 7 chord: root + major 3rd + perfect 5th + major 7th.",
+            "m7": "Minor 7 chord: root + minor 3rd + perfect 5th + minor 7th.",
+            "dom7": "Dominant 7 chord: root + major 3rd + perfect 5th + minor 7th.",
+            "m7b5": "Half-diminished: root + minor 3rd + diminished 5th + minor 7th.",
+            "sus2": "Sus2 replaces the 3rd with the 2nd: root + 2nd + 5th.",
+            "sus4": "Sus4 replaces the 3rd with the 4th: root + 4th + 5th.",
+            "dim": "Diminished triad: root + minor 3rd + diminished 5th.",
+            "aug": "Augmented triad: root + major 3rd + augmented 5th."
+        }
+    }
+}

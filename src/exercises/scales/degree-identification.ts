@@ -3,26 +3,7 @@ import type { Exercise, ExerciseQuestion } from '../types';
 
 const MAJOR_KEYS = ['C', 'G', 'D', 'F', 'Bb', 'A', 'Eb'];
 
-const DEGREE_NAMES = {
-    en: [
-        '1 (Tonic)',
-        '2 (Supertonic)',
-        '3 (Mediant)',
-        '4 (Subdominant)',
-        '5 (Dominant)',
-        '6 (Submediant)',
-        '7 (Leading)',
-    ],
-    ru: [
-        '1 (Тоника)',
-        '2 (Верхний вводный)',
-        '3 (Медианта)',
-        '4 (Субдоминанта)',
-        '5 (Доминанта)',
-        '6 (Субмедианта)',
-        '7 (Вводный тон)',
-    ],
-};
+// Degree names are now in i18n locales under scaleDegrees
 
 function shuffle<T>(array: T[]): T[] {
     const result = [...array];
@@ -61,11 +42,11 @@ function generateQuestion(): ExerciseQuestion {
     const octave = 4;
     const displayNote = `${targetNote}${octave}`;
 
-    // Generate options
+    // Generate options (1-7 + Non-diatonic)
     const options: string[] = [];
-    DEGREE_NAMES.en.forEach((_, i) => {
-        options.push(`${i + 1}`);
-    });
+    for (let i = 1; i <= 7; i++) {
+        options.push(`${i}`);
+    }
     options.push('Non-diatonic');
 
     const correctAnswer = correctDegree.toString();
@@ -73,34 +54,24 @@ function generateQuestion(): ExerciseQuestion {
     return {
         id: `degree-id-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         type: 'degree-identification',
-        prompt: {
-            en: `In ${key} major, what scale degree is this note?`,
-            ru: `В тональности ${key} мажор, какая это ступень?`,
-        },
+        promptKey: 'exercises.degreeIdentification.prompt',
+        promptParams: { key },
         clef: 'treble',
         keySignature: key,
         displayNotes: [displayNote],
         correctAnswer,
         options: shuffle(options).slice(0, 6),
         difficulty: 'hard',
-        hint: {
-            en: `The ${key} major scale is: ${scale.notes.join(', ')}`,
-            ru: `Гамма ${key} мажор: ${scale.notes.join(', ')}`,
-        },
+        hintKey: 'exercises.degreeIdentification.hint',
+        hintParams: { key, notes: scale.notes.join(', ') },
     };
 }
 
 export const DegreeIdentificationExercise: Exercise = {
     id: 'degree-identification',
     categoryId: 'scales',
-    title: {
-        en: 'Scale Degree Identification',
-        ru: 'Определение ступеней',
-    },
-    description: {
-        en: 'Given a key (e.g., "D major") + one note → choose its scale degree (1–7, or "non-diatonic").',
-        ru: 'Дана тональность (напр., «D мажор») + нота → выберите её ступень (1–7, или «не диатоническая»).',
-    },
+    titleKey: 'exercises.degreeIdentification.title',
+    descriptionKey: 'exercises.degreeIdentification.description',
     generateQuestion,
     settings: {
         difficulty: 'hard',

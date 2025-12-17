@@ -30,14 +30,8 @@ import {
 export const EXERCISE_CATEGORIES: ExerciseCategory[] = [
     {
         id: 'staff-reading',
-        title: {
-            en: 'Staff Reading',
-            ru: 'Чтение нот',
-        },
-        description: {
-            en: 'Learn to read notes on the musical staff quickly and accurately.',
-            ru: 'Научитесь быстро и точно читать ноты на нотном стане.',
-        },
+        titleKey: 'categories.staffReading',
+        descriptionKey: 'categories.staffReadingDesc',
         icon: 'music',
         color: 'indigo',
         exercises: [
@@ -51,14 +45,8 @@ export const EXERCISE_CATEGORIES: ExerciseCategory[] = [
     },
     {
         id: 'intervals',
-        title: {
-            en: 'Intervals',
-            ru: 'Интервалы',
-        },
-        description: {
-            en: 'Master musical intervals — the building blocks of harmony and melody.',
-            ru: 'Освойте музыкальные интервалы — основу гармонии и мелодии.',
-        },
+        titleKey: 'categories.intervals',
+        descriptionKey: 'categories.intervalsDesc',
         icon: 'git-compare',
         color: 'emerald',
         exercises: [
@@ -71,14 +59,8 @@ export const EXERCISE_CATEGORIES: ExerciseCategory[] = [
     },
     {
         id: 'scales',
-        title: {
-            en: 'Scales & Tonality',
-            ru: 'Гаммы и тональность',
-        },
-        description: {
-            en: 'Understand scales, keys, and how notes function within a tonal context.',
-            ru: 'Понимание гамм, тональностей и функций нот в тональном контексте.',
-        },
+        titleKey: 'categories.scales',
+        descriptionKey: 'categories.scalesDesc',
         icon: 'trending-up',
         color: 'amber',
         exercises: [

@@ -4,21 +4,7 @@ import type { Exercise, ExerciseQuestion, Clef } from '../types';
 const BASIC_INTERVALS = ['m2', 'M2', 'm3', 'M3', 'P4', 'P5', 'm6', 'M6', 'm7', 'M7', 'P8'];
 const ROOT_NOTES = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
 
-const INTERVAL_LABELS: Record<string, { en: string; ru: string }> = {
-    m2: { en: 'minor 2nd', ru: 'малую секунду' },
-    M2: { en: 'major 2nd', ru: 'большую секунду' },
-    m3: { en: 'minor 3rd', ru: 'малую терцию' },
-    M3: { en: 'major 3rd', ru: 'большую терцию' },
-    P4: { en: 'perfect 4th', ru: 'чистую кварту' },
-    A4: { en: 'augmented 4th', ru: 'увеличенную кварту' },
-    d5: { en: 'diminished 5th', ru: 'уменьшенную квинту' },
-    P5: { en: 'perfect 5th', ru: 'чистую квинту' },
-    m6: { en: 'minor 6th', ru: 'малую сексту' },
-    M6: { en: 'major 6th', ru: 'большую сексту' },
-    m7: { en: 'minor 7th', ru: 'малую септиму' },
-    M7: { en: 'major 7th', ru: 'большую септиму' },
-    P8: { en: 'perfect octave', ru: 'чистую октаву' },
-};
+// Interval labels are now in i18n locales under intervals.labels
 
 function shuffle<T>(array: T[]): T[] {
     const result = [...array];
@@ -64,25 +50,20 @@ function generateUpwardQuestion(): ExerciseQuestion {
     }
 
     const targetPitchClass = Note.pitchClass(targetNote) || targetNote;
-    const intervalLabel = INTERVAL_LABELS[interval];
 
     return {
         id: `interval-up-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         type: 'interval-construction',
-        prompt: {
-            en: `Build a ${intervalLabel.en} UP from ${rootNote}`,
-            ru: `Постройте ${intervalLabel.ru} ВВЕРХ от ${rootNote}`,
-        },
+        promptKey: 'exercises.intervalConstructionUp.promptUp',
+        promptParams: { interval, note: rootNote },
         clef,
         keySignature: 'C',
         displayNotes: [rootWithOctave],
         correctAnswer: targetPitchClass,
         options: generateOptions(targetPitchClass, rootNote),
         difficulty: 'medium',
-        hint: {
-            en: `Start from ${rootNote} and count up ${interval}`,
-            ru: `Начните с ${rootNote} и отсчитайте ${interval} вверх`,
-        },
+        hintKey: 'exercises.intervalConstructionUp.hintUp',
+        hintParams: { note: rootNote, interval },
     };
 }
 
@@ -124,39 +105,28 @@ function generateDownwardQuestion(): ExerciseQuestion {
     }
 
     const targetPitchClass = Note.pitchClass(targetNoteResult) || targetNoteResult;
-    const intervalLabel = INTERVAL_LABELS[interval];
 
     return {
         id: `interval-down-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         type: 'interval-construction',
-        prompt: {
-            en: `Build a ${intervalLabel.en} DOWN from ${rootNote}`,
-            ru: `Постройте ${intervalLabel.ru} ВНИЗ от ${rootNote}`,
-        },
+        promptKey: 'exercises.intervalConstructionDown.promptDown',
+        promptParams: { interval, note: rootNote },
         clef,
         keySignature: 'C',
         displayNotes: [rootWithOctave],
         correctAnswer: targetPitchClass,
         options: generateOptions(targetPitchClass, rootNote),
         difficulty: 'hard',
-        hint: {
-            en: `Start from ${rootNote} and count down ${interval}`,
-            ru: `Начните с ${rootNote} и отсчитайте ${interval} вниз`,
-        },
+        hintKey: 'exercises.intervalConstructionDown.hintDown',
+        hintParams: { note: rootNote, interval },
     };
 }
 
 export const IntervalConstructionUpExercise: Exercise = {
     id: 'interval-construction-up',
     categoryId: 'intervals',
-    title: {
-        en: 'Interval Construction (Up)',
-        ru: 'Построение интервалов (Вверх)',
-    },
-    description: {
-        en: 'Given a starting note and target interval ("Build a P5 up") → select the second note.',
-        ru: 'Дана начальная нота и целевой интервал («Постройте ч5 вверх») → выберите вторую ноту.',
-    },
+    titleKey: 'exercises.intervalConstructionUp.title',
+    descriptionKey: 'exercises.intervalConstructionUp.description',
     generateQuestion: generateUpwardQuestion,
     settings: {
         clefs: ['treble', 'bass'],
@@ -167,14 +137,8 @@ export const IntervalConstructionUpExercise: Exercise = {
 export const IntervalConstructionDownExercise: Exercise = {
     id: 'interval-construction-down',
     categoryId: 'intervals',
-    title: {
-        en: 'Interval Construction (Down)',
-        ru: 'Построение интервалов (Вниз)',
-    },
-    description: {
-        en: 'Same as above, but build the interval downward.',
-        ru: 'То же самое, но постройте интервал вниз.',
-    },
+    titleKey: 'exercises.intervalConstructionDown.title',
+    descriptionKey: 'exercises.intervalConstructionDown.description',
     generateQuestion: generateDownwardQuestion,
     settings: {
         clefs: ['treble', 'bass'],

@@ -30,10 +30,7 @@ function generateQuestion(clef: Clef = 'treble'): ExerciseQuestion {
     return {
         id: `note-id-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         type: 'note-identification',
-        prompt: {
-            en: 'Name this note',
-            ru: 'Назовите эту ноту',
-        },
+        promptKey: 'exercises.staffNoteIdentification.prompt',
         clef,
         keySignature: 'C',
         displayNotes: [fullNote],
@@ -46,14 +43,8 @@ function generateQuestion(clef: Clef = 'treble'): ExerciseQuestion {
 export const NoteIdentificationExercise: Exercise = {
     id: 'staff-note-identification',
     categoryId: 'staff-reading',
-    title: {
-        en: 'Staff Note Identification',
-        ru: 'Определение нот на нотоносце',
-    },
-    description: {
-        en: 'Identify single notes on the musical staff. A great starting point for reading music.',
-        ru: 'Определите ноту на нотном стане. Отличное начало для чтения нот.',
-    },
+    titleKey: 'exercises.staffNoteIdentification.title',
+    descriptionKey: 'exercises.staffNoteIdentification.description',
     generateQuestion: () => generateQuestion('treble'),
     settings: {
         clefs: ['treble'],
@@ -64,14 +55,8 @@ export const NoteIdentificationExercise: Exercise = {
 export const NoteIdentificationClefSwitchingExercise: Exercise = {
     id: 'staff-note-clef-switching',
     categoryId: 'staff-reading',
-    title: {
-        en: 'Note ID: Treble vs Bass',
-        ru: 'Ноты: Скрипичный и Басовый ключи',
-    },
-    description: {
-        en: 'Same as above but the clef randomly switches. Train to adapt quickly!',
-        ru: 'То же самое, но ключ меняется случайным образом. Тренируйтесь быстро адаптироваться!',
-    },
+    titleKey: 'exercises.staffNoteClefSwitching.title',
+    descriptionKey: 'exercises.staffNoteClefSwitching.description',
     generateQuestion: () => {
         const clef: Clef = Math.random() > 0.5 ? 'treble' : 'bass';
         return generateQuestion(clef);

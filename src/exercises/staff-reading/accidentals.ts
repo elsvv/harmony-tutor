@@ -43,10 +43,7 @@ function generateQuestion(): ExerciseQuestion {
     return {
         id: `accidental-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         type: 'note-identification',
-        prompt: {
-            en: 'Name this note (including accidental)',
-            ru: 'Назовите эту ноту (с учётом знака альтерации)',
-        },
+        promptKey: 'exercises.accidentalReading.prompt',
         clef,
         keySignature: 'C',
         displayNotes: [fullNote],
@@ -59,14 +56,8 @@ function generateQuestion(): ExerciseQuestion {
 export const AccidentalReadingExercise: Exercise = {
     id: 'accidental-reading',
     categoryId: 'staff-reading',
-    title: {
-        en: 'Accidental Reading',
-        ru: 'Чтение знаков альтерации',
-    },
-    description: {
-        en: 'A note with ♯/♭ appears — identify the sounding note (e.g., "F#", "Bb").',
-        ru: 'Появляется нота со знаком ♯/♭ — определите звучащую ноту (например, "F#", "Bb").',
-    },
+    titleKey: 'exercises.accidentalReading.title',
+    descriptionKey: 'exercises.accidentalReading.description',
     generateQuestion,
     settings: {
         includeAccidentals: true,

@@ -1,32 +1,18 @@
 import { useEffect, useState } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import Staff from '../components/music/Staff';
 import Piano from '../components/music/Piano';
 import { useMidi } from '../engine/MidiManager';
 import { MusicTheory } from '../engine/MusicTheory';
-import {
-    Play,
-    RefreshCw,
-    CheckCircle,
-    XCircle,
-    Menu,
-    Music,
-    BookOpen,
-    Languages,
-    Info,
-    Folder,
-    ChevronDown,
-    Home,
-} from 'lucide-react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { Play, RefreshCw, CheckCircle, XCircle, Info } from 'lucide-react';
 import { cn } from '../lib/utils';
 import ErrorBoundary from '../components/ui/ErrorBoundary';
-import { TRANSLATIONS } from '../i18n/translations';
-import type { Language } from '../i18n/types';
+import { type Language } from '../i18n';
 import { ProgressionTracker } from '../components/ui/ProgressionTracker';
 import { InfoDrawer } from '../components/ui/InfoDrawer';
-import { Drawer } from '../components/ui/Drawer';
 import { getProgressionContent, getChordContent } from '../content';
+import { AppLayout } from '../components/layout/AppLayout';
 
 // Import lessons
 import { TriadsLesson } from '../lessons/basic-harmony/triads';
@@ -50,19 +36,17 @@ import {
     SeventhChordsLesson,
     SusChordsLesson,
 } from '../lessons/basic-harmony/common-chords';
-import { EXERCISE_CATEGORIES } from '../exercises';
-import { GitCompare, TrendingUp } from 'lucide-react';
 
 // Lesson categories registry
 export const LESSON_CATEGORIES = [
     {
         id: 'basics',
-        titleKey: 'categoryBasics',
+        titleKey: 'categories.basics',
         lessons: [TriadsLesson, SeventhChordsLesson, SusChordsLesson, AlteredTriadsLesson],
     },
     {
         id: 'classical',
-        titleKey: 'categoryClassical',
+        titleKey: 'categories.classical',
         lessons: [
             LessonSequenceA,
             LessonSequenceB,
@@ -74,7 +58,7 @@ export const LESSON_CATEGORIES = [
     },
     {
         id: 'jazz',
-        titleKey: 'categoryJazz',
+        titleKey: 'categories.jazz',
         lessons: [
             JazzIIVILesson,
             JazzTurnaroundLesson,
@@ -88,33 +72,26 @@ export const LESSON_CATEGORIES = [
 export const AVAILABLE_LESSONS = LESSON_CATEGORIES.flatMap((c) => c.lessons);
 
 export function ProgressionsPage() {
-    const { activeNotes, midiEnabled } = useMidi();
+    const { activeNotes } = useMidi();
     const { taskId } = useParams();
-    const navigate = useNavigate();
+    const { t, i18n } = useTranslation();
+    const lang = i18n.language as Language;
 
     const lesson = AVAILABLE_LESSONS.find((l) => l.id === taskId) || AVAILABLE_LESSONS[0];
 
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [userNotes, setUserNotes] = useState<string[]>([]);
     const [feedback, setFeedback] = useState<{ isCorrect: boolean; message: string } | null>(null);
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [lang, setLang] = useState<Language>('en');
     const [selectedKey, setSelectedKey] = useState('C');
-    const [openCategoryId, setOpenCategoryId] = useState<string | null>(null);
 
     const [isLessonInfoOpen, setIsLessonInfoOpen] = useState(false);
     const [isChordInfoOpen, setIsChordInfoOpen] = useState(false);
     const [activeChordLabel, setActiveChordLabel] = useState<string | null>(null);
 
-    const t = TRANSLATIONS[lang];
     const currentQuestion = lesson.questions[currentQuestionIndex];
 
-    const activeCategoryId =
-        LESSON_CATEGORIES.find((c) => c.lessons.some((l) => l.id === lesson.id))?.id || null;
-
-    useEffect(() => {
-        if (activeCategoryId) setOpenCategoryId(activeCategoryId);
-    }, [activeCategoryId]);
+    const activeCategory = LESSON_CATEGORIES.find((c) => c.lessons.some((l) => l.id === lesson.id));
+    const breadcrumbs = activeCategory ? [{ label: t(activeCategory.titleKey) }] : [];
 
     useEffect(() => {
         setUserNotes(activeNotes);
@@ -137,7 +114,10 @@ export function ProgressionsPage() {
     const checkAnswer = () => {
         if (!currentQuestion) return;
         const isCorrect = currentQuestion.validate(userNotes);
-        setFeedback({ isCorrect, message: isCorrect ? t.correct : t.incorrect });
+        setFeedback({
+            isCorrect,
+            message: isCorrect ? t('exercise.correct') : t('exercise.incorrect'),
+        });
     };
 
     useEffect(() => {
@@ -145,7 +125,7 @@ export function ProgressionsPage() {
 
         if (!feedback?.isCorrect && userNotes.length > 0) {
             if (currentQuestion.validate(userNotes)) {
-                setFeedback({ isCorrect: true, message: t.correct });
+                setFeedback({ isCorrect: true, message: t('exercise.correct') });
             }
         }
 
@@ -203,244 +183,20 @@ export function ProgressionsPage() {
     }, [lesson, currentQuestion]);
 
     return (
-        <div className="min-h-screen bg-[var(--color-background)] text-[var(--color-text-primary)] font-sans flex flex-col items-center transition-colors duration-300">
-            {/* Navigation Drawer */}
-            <Drawer
-                isOpen={isMenuOpen}
-                onClose={() => setIsMenuOpen(false)}
-                side="left"
-                width="w-80"
-                title={
-                    <span className="flex items-center gap-2 text-lg">
-                        <Music className="w-5 h-5 text-[var(--color-primary)]" />
-                        {t.appTitle}
-                    </span>
-                }
-            >
-                <div className="p-4">
-                    {/* Home link */}
-                    <Link
-                        to="/"
-                        className="flex items-center gap-3 px-3 py-2.5 mb-4 rounded-xl text-sm font-medium text-stone-600 hover:bg-stone-50 transition-colors"
-                        onClick={() => setIsMenuOpen(false)}
-                    >
-                        <Home className="w-4 h-4" />
-                        {t.back || 'Home'}
-                    </Link>
-
-                    {/* Exercises Section */}
-                    <h3 className="text-xs font-semibold text-stone-400 uppercase tracking-wider mb-4 px-2">
-                        {t.exerciseCategories}
-                    </h3>
-                    <div className="space-y-2 mb-6">
-                        {EXERCISE_CATEGORIES.map((category) => {
-                            const isOpen = openCategoryId === `ex-${category.id}`;
-                            const icon =
-                                category.id === 'staff-reading' ? (
-                                    <Music className="w-4 h-4 text-stone-400 shrink-0" />
-                                ) : category.id === 'intervals' ? (
-                                    <GitCompare className="w-4 h-4 text-stone-400 shrink-0" />
-                                ) : (
-                                    <TrendingUp className="w-4 h-4 text-stone-400 shrink-0" />
-                                );
-
-                            return (
-                                <div
-                                    key={category.id}
-                                    className="rounded-xl border border-stone-100 bg-white"
-                                >
-                                    <button
-                                        onClick={() =>
-                                            setOpenCategoryId((prev) =>
-                                                prev === `ex-${category.id}`
-                                                    ? null
-                                                    : `ex-${category.id}`
-                                            )
-                                        }
-                                        className={cn(
-                                            'w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-colors',
-                                            isOpen
-                                                ? 'bg-stone-50 text-stone-900'
-                                                : 'text-stone-700 hover:bg-stone-50'
-                                        )}
-                                    >
-                                        <span className="flex items-center gap-2 min-w-0">
-                                            {icon}
-                                            <span className="truncate">{category.title[lang]}</span>
-                                        </span>
-                                        <ChevronDown
-                                            className={cn(
-                                                'w-4 h-4 text-stone-400 transition-transform shrink-0',
-                                                isOpen && 'rotate-180'
-                                            )}
-                                        />
-                                    </button>
-
-                                    <AnimatePresence initial={false}>
-                                        {isOpen && (
-                                            <motion.div
-                                                initial={{ height: 0, opacity: 0 }}
-                                                animate={{ height: 'auto', opacity: 1 }}
-                                                exit={{ height: 0, opacity: 0 }}
-                                                transition={{ duration: 0.18 }}
-                                                className="overflow-hidden"
-                                            >
-                                                <div className="px-2 pb-2 space-y-1">
-                                                    {category.exercises.map((ex) => (
-                                                        <button
-                                                            key={ex.id}
-                                                            onClick={() => {
-                                                                navigate(`/exercise/${ex.id}`);
-                                                                setIsMenuOpen(false);
-                                                            }}
-                                                            className="w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-stone-600 hover:bg-stone-50"
-                                                        >
-                                                            {ex.title[lang]}
-                                                        </button>
-                                                    ))}
-                                                </div>
-                                            </motion.div>
-                                        )}
-                                    </AnimatePresence>
-                                </div>
-                            );
-                        })}
-                    </div>
-
-                    {/* Progressions Section */}
-                    <h3 className="text-xs font-semibold text-stone-400 uppercase tracking-wider mb-4 px-2">
-                        {t.library}
-                    </h3>
-                    <div className="space-y-2">
-                        {LESSON_CATEGORIES.map((category) => {
-                            const isOpen = openCategoryId === category.id;
-                            const title = t[category.titleKey as keyof typeof t] as string;
-
-                            return (
-                                <div
-                                    key={category.id}
-                                    className="rounded-xl border border-stone-100 bg-white"
-                                >
-                                    <button
-                                        onClick={() =>
-                                            setOpenCategoryId((prev) =>
-                                                prev === category.id ? null : category.id
-                                            )
-                                        }
-                                        className={cn(
-                                            'w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-colors',
-                                            isOpen
-                                                ? 'bg-stone-50 text-stone-900'
-                                                : 'text-stone-700 hover:bg-stone-50'
-                                        )}
-                                    >
-                                        <span className="flex items-center gap-2 min-w-0">
-                                            <Folder className="w-4 h-4 text-stone-400 shrink-0" />
-                                            <span className="truncate">{title}</span>
-                                        </span>
-                                        <ChevronDown
-                                            className={cn(
-                                                'w-4 h-4 text-stone-400 transition-transform shrink-0',
-                                                isOpen && 'rotate-180'
-                                            )}
-                                        />
-                                    </button>
-
-                                    <AnimatePresence initial={false}>
-                                        {isOpen && (
-                                            <motion.div
-                                                initial={{ height: 0, opacity: 0 }}
-                                                animate={{ height: 'auto', opacity: 1 }}
-                                                exit={{ height: 0, opacity: 0 }}
-                                                transition={{ duration: 0.18 }}
-                                                className="overflow-hidden"
-                                            >
-                                                <div className="px-2 pb-2 space-y-1">
-                                                    {category.lessons.map((l) => (
-                                                        <button
-                                                            key={l.id}
-                                                            onClick={() => {
-                                                                navigate(`/progressions/${l.id}`);
-                                                                setIsMenuOpen(false);
-                                                            }}
-                                                            className={cn(
-                                                                'w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium transition-colors flex items-center gap-3',
-                                                                lesson.id === l.id
-                                                                    ? 'bg-[var(--color-surface-highlight)] text-[var(--color-primary)]'
-                                                                    : 'text-stone-600 hover:bg-stone-50'
-                                                            )}
-                                                        >
-                                                            <BookOpen className="w-4 h-4 opacity-50" />
-                                                            {l.title[lang]}
-                                                        </button>
-                                                    ))}
-                                                </div>
-                                            </motion.div>
-                                        )}
-                                    </AnimatePresence>
-                                </div>
-                            );
-                        })}
-                    </div>
-                </div>
-            </Drawer>
-
-            <header className="w-full max-w-[1600px] px-6 py-4 mb-6 flex justify-between items-center border-b border-[var(--color-border)] bg-white/50 backdrop-blur-sm sticky top-0 z-30">
-                <div className="flex items-center gap-4">
-                    <button
-                        onClick={() => setIsMenuOpen(true)}
-                        className="p-2 -ml-2 rounded-lg hover:bg-stone-100 text-stone-600 transition-colors"
-                    >
-                        <Menu className="w-5 h-5" />
-                    </button>
-                    <Link
-                        to="/"
-                        className="text-xl font-bold tracking-tight text-[var(--color-text-primary)] hover:text-indigo-600 transition-colors"
-                    >
-                        {t.appTitle}
-                    </Link>
-                </div>
-                <div className="flex items-center gap-4 text-sm">
-                    <button
-                        onClick={() => setLang((prev) => (prev === 'en' ? 'ru' : 'en'))}
-                        className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-stone-200 bg-white text-stone-600 hover:bg-stone-50 transition-colors text-xs font-medium uppercase"
-                    >
-                        <Languages className="w-3.5 h-3.5" />
-                        {lang}
-                    </button>
-
-                    <div
-                        className={cn(
-                            'flex items-center gap-2 px-3 py-1.5 rounded-full border transition-colors text-xs font-medium',
-                            midiEnabled
-                                ? 'bg-emerald-50 border-emerald-200 text-emerald-700'
-                                : 'bg-stone-100 border-stone-200 text-stone-500'
-                        )}
-                    >
-                        <div
-                            className={cn(
-                                'w-1.5 h-1.5 rounded-full',
-                                midiEnabled ? 'bg-emerald-500' : 'bg-stone-400'
-                            )}
-                        />
-                        {midiEnabled ? t.midiOn : t.midiOff}
-                    </div>
-                </div>
-            </header>
-
-            <main className="w-full max-w-[1400px] px-6 pb-6 flex-1 flex flex-col gap-4 mx-auto">
+        <AppLayout breadcrumbs={breadcrumbs}>
+            <div className="w-full max-w-[1400px] px-6 py-6 flex-1 flex flex-col gap-4 mx-auto">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 animate-in fade-in slide-in-from-top-4 duration-500">
                     <div>
                         <div className="flex items-center gap-2 mb-1">
                             <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)] bg-stone-100 px-2 py-0.5 rounded-full">
-                                {t.currentLesson}
+                                {t('exercise.currentLesson')}
                             </span>
                         </div>
                         <h2 className="text-xl md:text-2xl font-bold text-[var(--color-text-primary)] leading-tight">
-                            {lesson.title[lang]}
+                            {t(lesson.titleKey)}
                         </h2>
                         <p className="text-[var(--color-text-secondary)] mt-1 text-sm leading-relaxed max-w-2xl">
-                            {lesson.description[lang]}
+                            {t(lesson.descriptionKey)}
                         </p>
                     </div>
 
@@ -448,10 +204,12 @@ export function ProgressionsPage() {
                         <button
                             onClick={() => setIsLessonInfoOpen(true)}
                             className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-stone-200 bg-white hover:bg-stone-50 hover:border-[var(--color-primary)] text-stone-600 hover:text-[var(--color-primary)] transition-all group"
-                            title={t.lessonInfoTitle}
+                            title={t('exercise.lessonInfoTitle')}
                         >
                             <Info className="w-4 h-4" />
-                            <span className="text-sm font-medium">{t.progressionInfo}</span>
+                            <span className="text-sm font-medium">
+                                {t('progression.progressionInfo')}
+                            </span>
                         </button>
                     )}
                 </div>
@@ -485,7 +243,9 @@ export function ProgressionsPage() {
                                 {displayNotes.length > 0 ? (
                                     displayNotes.join(' - ')
                                 ) : (
-                                    <span className="opacity-40 italic">{t.playNotes}</span>
+                                    <span className="opacity-40 italic">
+                                        {t('exercise.playNotes')}
+                                    </span>
                                 )}
                             </div>
                         </div>
@@ -493,18 +253,22 @@ export function ProgressionsPage() {
                         <div className="lg:col-span-7 card rounded-2xl p-6 md:p-8 bg-white shadow-sm border border-stone-100 flex flex-col justify-between gap-6">
                             <div>
                                 <span className="text-xs font-bold uppercase tracking-wider text-[var(--color-text-muted)] mb-2 block">
-                                    {t.task}
+                                    {t('exercise.task')}
                                 </span>
                                 <h2 className="text-3xl font-bold text-[var(--color-text-primary)] leading-none tracking-tight">
-                                    {currentQuestion ? currentQuestion.text[lang] : t.loading}
+                                    {currentQuestion
+                                        ? t(currentQuestion.textKey, currentQuestion.textParams)
+                                        : t('common.loading')}
                                 </h2>
 
-                                {currentQuestion?.hint && (
+                                {currentQuestion?.hintKey && (
                                     <div className="mt-4 text-sm text-[var(--color-text-secondary)] italic flex items-center gap-2">
                                         <span className="bg-amber-100/50 text-amber-600 rounded px-1.5 py-0.5 text-xs font-bold not-italic">
-                                            {t.hint}
+                                            {t('common.hint')}
                                         </span>
-                                        <span>{currentQuestion.hint[lang]}</span>
+                                        <span>
+                                            {t(currentQuestion.hintKey, currentQuestion.hintParams)}
+                                        </span>
                                     </div>
                                 )}
                             </div>
@@ -561,9 +325,9 @@ export function ProgressionsPage() {
                                                 setActiveChordLabel(label);
                                                 setIsChordInfoOpen(true);
                                             }}
-                                            keyLabel={t.keyLabel}
-                                            restartTitle={t.restartSequence}
-                                            chordInfoTitleTemplate={t.chordInfoTitle}
+                                            keyLabel={t('progression.keyLabel')}
+                                            restartTitle={t('progression.restartSequence')}
+                                            chordInfoTitleTemplate={t('progression.chordInfoTitle')}
                                         />
                                     </div>
                                 )}
@@ -588,7 +352,7 @@ export function ProgressionsPage() {
                                         </div>
                                     ) : (
                                         <span className="text-stone-300 text-sm italic">
-                                            {t.playOnPiano}
+                                            {t('exercise.playOnPiano')}
                                         </span>
                                     )}
                                 </div>
@@ -604,7 +368,8 @@ export function ProgressionsPage() {
                                                 : 'bg-[var(--color-primary)] text-white hover:opacity-90 hover:scale-[1.02] active:scale-[0.98] shadow-md shadow-indigo-100'
                                         )}
                                     >
-                                        <Play className="w-4 h-4 fill-current" /> {t.checkAnswer}
+                                        <Play className="w-4 h-4 fill-current" />{' '}
+                                        {t('exercise.checkAnswer')}
                                     </button>
 
                                     {feedback?.isCorrect && (
@@ -617,8 +382,8 @@ export function ProgressionsPage() {
                                             (currentQuestion?.metadata?.progressionIndex || 0) +
                                                 1 ===
                                                 currentQuestion?.metadata?.progressionTotal
-                                                ? t.finish
-                                                : t.nextQuestion}
+                                                ? t('exercise.finish')
+                                                : t('exercise.nextQuestion')}
                                         </button>
                                     )}
                                 </div>
@@ -635,29 +400,29 @@ export function ProgressionsPage() {
                         />
                     </div>
                 </div>
-            </main>
 
-            <InfoDrawer
-                isOpen={isLessonInfoOpen}
-                onClose={() => setIsLessonInfoOpen(false)}
-                title={lesson.title[lang]}
-                content={getProgressionContent(lesson.id, lang)}
-                fallbackTitle={t.info}
-                emptyText={t.infoUnavailable}
-            />
+                <InfoDrawer
+                    isOpen={isLessonInfoOpen}
+                    onClose={() => setIsLessonInfoOpen(false)}
+                    title={t(lesson.titleKey)}
+                    content={getProgressionContent(lesson.id, lang)}
+                    fallbackTitle={t('common.info')}
+                    emptyText={t('common.infoUnavailable')}
+                />
 
-            <InfoDrawer
-                isOpen={isChordInfoOpen}
-                onClose={() => {
-                    setIsChordInfoOpen(false);
-                    setActiveChordLabel(null);
-                }}
-                title={activeChordLabel || t.chord}
-                content={activeChordLabel ? getChordContent(activeChordLabel, lang) : null}
-                fallbackTitle={t.info}
-                emptyText={t.infoUnavailable}
-            />
-        </div>
+                <InfoDrawer
+                    isOpen={isChordInfoOpen}
+                    onClose={() => {
+                        setIsChordInfoOpen(false);
+                        setActiveChordLabel(null);
+                    }}
+                    title={activeChordLabel || t('common.chord')}
+                    content={activeChordLabel ? getChordContent(activeChordLabel, lang) : null}
+                    fallbackTitle={t('common.info')}
+                    emptyText={t('common.infoUnavailable')}
+                />
+            </div>
+        </AppLayout>
     );
 }
 
